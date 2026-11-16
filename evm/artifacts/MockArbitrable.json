@@ -1,0 +1,114 @@
+{
+  "contractName": "MockArbitrable",
+  "source": "evm/test/MockArbitrable.sol",
+  "compiler": "0.8.26+commit.8a97fa7a.Emscripten.clang",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "contract IArbitratorLike",
+          "name": "_arbitrator",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "arbitrator",
+      "outputs": [
+        {
+          "internalType": "contract IArbitratorLike",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "challenge",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "id",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "lastDispute",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_disputeID",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_ruling",
+          "type": "uint256"
+        }
+      ],
+      "name": "rule",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "ruled",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "rulings",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x6080604052348015600f57600080fd5b506040516103bd3803806103bd833981016040819052602c916050565b600080546001600160a01b0319166001600160a01b0392909216919091179055607e565b600060208284031215606157600080fd5b81516001600160a01b0381168114607757600080fd5b9392505050565b6103308061008d6000396000f3fe6080604052600436106100555760003560e01c806315f6dc7f1461005a578063311a6c561461009a5780636cc6cde1146100bc57806386e1a4b0146100f4578063d2ef739814610134578063fe018d841461013c575b600080fd5b34801561006657600080fd5b506100876100753660046102a6565b60016020526000908152604090205481565b6040519081526020015b60405180910390f35b3480156100a657600080fd5b506100ba6100b53660046102bf565b610152565b005b3480156100c857600080fd5b506000546100dc906001600160a01b031681565b6040516001600160a01b039091168152602001610091565b34801561010057600080fd5b5061012461010f3660046102a6565b60026020526000908152604090205460ff1681565b6040519015158152602001610091565b61008761021a565b34801561014857600080fd5b5061008760035481565b6000546001600160a01b031633146101a35760405162461bcd60e51b815260206004820152600f60248201526e37b7363c9030b93134ba3930ba37b960891b60448201526064015b60405180910390fd5b60008281526002602052604090205460ff16156101f25760405162461bcd60e51b815260206004820152600d60248201526c185b1c9958591e481c9d5b1959609a1b604482015260640161019a565b6000918252600260209081526040808420805460ff1916600190811790915590915290912055565b600080546040805163c13517e160e01b8152600260048201526024810191909152604481018390526001600160a01b039091169063c13517e190349060640160206040518083038185885af1158015610277573d6000803e3d6000fd5b50505050506040513d601f19601f8201168201806040525081019061029c91906102e1565b6003819055919050565b6000602082840312156102b857600080fd5b5035919050565b600080604083850312156102d257600080fd5b50508035926020909101359150565b6000602082840312156102f357600080fd5b505191905056fea2646970667358221220ded9b69e42c746f0bfb4c2ab5943c519e27b6cc3c1623cfdc7e45f5b14169b5364736f6c634300081a0033"
+}
