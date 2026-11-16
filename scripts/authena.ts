@@ -6,6 +6,7 @@
  *   npx tsx scripts/authena.ts verdict <dispute-id>
  *   npx tsx scripts/authena.ts list <owner/repo> <commit> <folder>                      (needs AUTHENA_KEY)
  *   npx tsx scripts/authena.ts challenge <owner/repo> <commit> <folder> <file> "<quote>" (needs AUTHENA_KEY)
+ *   npx tsx scripts/authena.ts remove <owner/repo> <commit> <folder> <file> "<quote>"    (needs AUTHENA_KEY)
  *   npx tsx scripts/authena.ts relay <sepolia-challenge-tx>                              (relayer only)
  *
  * `check` exits 0 only when that exact version is registered, so an agent can gate an install on it.
@@ -13,7 +14,7 @@
  */
 import type { Hex } from "viem";
 import { deployment, explorerTx, wallet } from "./lib";
-import { challenge, itemIdOf, list, listingOf, relay, status, verdict } from "./curate-lib";
+import { challenge, itemIdOf, list, listingOf, relay, requestRemoval, status, verdict } from "./curate-lib";
 
 const [cmd, ...args] = process.argv.slice(2);
 const key = () => {
@@ -26,7 +27,7 @@ const canonical = (repo: string, commit: string, folder = "") => {
   return listingOf(repo, commit, folder.replace(/^\/+|\/+$/g, ""));
 };
 const usage = () => {
-  console.error("usage: authena check|list|challenge|verdict|relay … (see the header of scripts/authena.ts)");
+  console.error("usage: authena check|list|challenge|remove|verdict|relay … (see the header of scripts/authena.ts)");
   process.exit(2);
 };
 
@@ -46,6 +47,11 @@ try {
   } else if (cmd === "challenge" && args.length === 5) {
     const itemId = itemIdOf(canonical(args[0], args[1], args[2]));
     const out = await challenge(key(), itemId, JSON.stringify({ file: args[3], quote: args[4] }));
+    console.log(JSON.stringify({ ...out, itemId, explorer: explorerTx(out.tx) }, null, 2));
+  } else if (cmd === "remove" && args.length === 5) {
+    // Ask to remove a listed skill. The request succeeds unless someone disputes it in the window.
+    const itemId = itemIdOf(canonical(args[0], args[1], args[2]));
+    const out = await requestRemoval(key(), itemId, JSON.stringify({ file: args[3], quote: args[4] }));
     console.log(JSON.stringify({ ...out, itemId, explorer: explorerTx(out.tx) }, null, 2));
   } else if (cmd === "relay" && args.length === 1) {
     console.log(JSON.stringify(await relay(args[0] as Hex, `relay-${args[0].slice(2, 10)}`), null, 2));

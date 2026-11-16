@@ -27,7 +27,7 @@ const signer = wallet(signerKey());
 for (const role of roles) {
   const address = wallets[role].address as `0x${string}`;
   const balance = await pub.getBalance({ address });
-  if (balance < TARGET / 2n) {
+  if (balance < (TARGET * 3n) / 4n) {
     const hash = await signer.sendTransaction({ to: address, value: TARGET - balance });
     await pub.waitForTransactionReceipt({ hash });
   }
