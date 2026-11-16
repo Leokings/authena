@@ -398,3 +398,17 @@ def test_transaction_hashes_may_arrive_as_bytes(court, direct_vm):
     mock_verdict(direct_vm, "MALICIOUS")
     as_bytes = lambda h: bytes.fromhex(h[2:])
     assert court.judge(7, as_bytes(LIST_TX), as_bytes(CHALLENGE_TX), as_bytes(CHALLENGE_TX)) == "MALICIOUS"
+
+
+def test_transaction_hashes_may_arrive_as_integers(court, direct_vm):
+    # The GenLayer CLI parses a 0x-prefixed argument as a number.
+    stage_registration(direct_vm, ACCUSE)
+    mock_verdict(direct_vm, "MALICIOUS")
+    as_int = lambda h: int(h, 16)
+    assert court.judge(7, as_int(LIST_TX), as_int(CHALLENGE_TX), as_int(CHALLENGE_TX)) == "MALICIOUS"
+
+
+@pytest.mark.parametrize("bad", [0, -5, 1 << 256, True])
+def test_integers_that_cannot_be_a_hash_are_rejected(court, direct_vm, bad):
+    with direct_vm.expect_revert("[EXPECTED] invalid_tx_hash"):
+        court.judge(7, bad, CHALLENGE_TX, CHALLENGE_TX)

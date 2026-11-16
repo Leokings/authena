@@ -9,7 +9,7 @@
  * Writes deployments/sepolia.json. Refuses to run twice unless --force is passed.
  */
 import { existsSync, mkdirSync, writeFileSync } from "node:fs";
-import { decodeEventLog, parseEther, zeroAddress } from "viem";
+import { decodeEventLog, formatEther, parseEther, zeroAddress } from "viem";
 import { artifact, DEPLOYMENT, explorerTx, FACTORY, factoryAbi, pub, signerKey, wallet } from "./lib";
 
 const DEPOSIT = parseEther("0.001"); // the same on both sides, so "refuse to rule" returns each side its own
@@ -25,7 +25,7 @@ if (existsSync(DEPLOYMENT) && !process.argv.includes("--force")) {
 
 const w = wallet(signerKey());
 const deployer = w.account.address;
-console.log(`deployer ${deployer}, balance ${(await pub.getBalance({ address: deployer })) / 10n ** 14n / 10000n} ETH (approx.)`);
+console.log(`deployer ${deployer}, balance ${formatEther(await pub.getBalance({ address: deployer }))} ETH`);
 
 const arb = artifact("GenLayerArbitrator");
 const arbTx = await w.deployContract({ abi: arb.abi, bytecode: arb.bytecode, args: [deployer, ARBITRATION_FEE, RULING_TIMEOUT] });

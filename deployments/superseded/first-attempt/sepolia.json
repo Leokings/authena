@@ -1,0 +1,19 @@
+{
+  "network": "sepolia",
+  "chainId": 11155111,
+  "factory": "0x3FB8314C628E9afE7677946D3E23443Ce748Ac17",
+  "arbitrator": "0xffa704dda983e27ba0d316dcdf13caae285d2a7b",
+  "registry": "0xf7B4159243C4504A5400A1Df0F1c31eb9c62899a",
+  "deployer": "0xEAa24431285FE4939e8595AA3a555Bfb657D4002",
+  "relayer": "0xEAa24431285FE4939e8595AA3a555Bfb657D4002",
+  "arbitratorDeployTx": "0x91a0721b1b9e214107d3b8ad6981c12cc3d6f5b02e36b9b9cb743bdc4d2748df",
+  "registryDeployTx": "0xcc87b58765417adcb9a953a40ab80dd3f17546790bc77473762183a6170ffb8f",
+  "fromBlock": "12148383",
+  "depositWei": "1000000000000000",
+  "arbitrationFeeWei": "0",
+  "challengePeriodSeconds": 600,
+  "rulingTimeoutSeconds": 1800,
+  "policy": "https://github.com/Leokings/authena/blob/main/docs/POLICY.md",
+  "arbitratorSource": "evm/GenLayerArbitrator.sol",
+  "compiler": "0.8.26+commit.8a97fa7a.Emscripten.clang"
+}

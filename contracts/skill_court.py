@@ -82,9 +82,11 @@ def _addr(value: Any) -> str:
 
 
 def _tx_hash(value: Any) -> str:
-    # Some clients encode a 0x-prefixed 32-byte value as calldata bytes.
+    # Clients differ: the GenLayer CLI turns a 0x-prefixed hash into an integer, others send bytes.
     if isinstance(value, (bytes, bytearray)) and len(value) == 32:
         value = "0x" + bytes(value).hex()
+    elif isinstance(value, int) and not isinstance(value, bool) and 0 < value < 1 << 256:
+        value = "0x" + format(value, "064x")
     if not _is_hex(value, 64):
         _fail("invalid_tx_hash")
     return value.lower()
