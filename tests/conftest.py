@@ -96,6 +96,8 @@ class FakeWorld:
         self.rpc_status = 200
         self.rpc_error_methods: set[str] = set()
         self.github_status: int | None = None
+        self.ipfs: dict[str, bytes] = {}
+        self.ipfs_status: int | None = None
         self.requests: list[str] = []
 
     def handle(self, data: dict) -> dict:
@@ -103,6 +105,11 @@ class FakeWorld:
         self.requests.append(url)
         if "publicnode.com" in url:
             return self._rpc(data)
+        if url.startswith("https://cdn.kleros.link/ipfs/"):
+            if self.ipfs_status is not None:
+                return self._response(self.ipfs_status, b"")
+            body = self.ipfs.get(url[len("https://cdn.kleros.link") :])
+            return self._response(404, b"not found") if body is None else self._response(200, body)
         if url.startswith("https://raw.githubusercontent.com/"):
             if self.github_status is not None:
                 return self._response(self.github_status, b"")
@@ -146,8 +153,34 @@ class FakeWorld:
         self.files["/".join(p for p in (repo, commit, path, name) if p)] = raw
 
 
+    def pin(self, uri: str, doc: object) -> str:
+        """Stores a file on the fake IPFS gateway and returns its on-chain path."""
+        self.ipfs[uri] = doc if isinstance(doc, bytes) else json.dumps(doc).encode("utf-8")
+        return uri
+
+
 def world(vm) -> FakeWorld:
     return vm._live_web_handler.__self__
+
+
+ITEM_URI = "/ipfs/QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG/item.json"
+EVIDENCE_URI = "/ipfs/QmPZ9gcCEpqKTo6aq61g2nXGUhM4iCL3ewB6LDXZCtioEB/evidence.json"
+COLUMNS = [
+    {"label": "Repository", "description": "GitHub repository as owner/name.", "type": "text", "isIdentifier": True},
+    {"label": "Commit", "description": "The full 40-character commit hash of the listed version.", "type": "text", "isIdentifier": True},
+    {"label": "Folder", "description": "Folder in the repository that holds SKILL.md.", "type": "text", "isIdentifier": True},
+    {"label": "Skill", "description": "Link to the skill at that commit.", "type": "link", "isIdentifier": False},
+]
+
+
+def item_file(repo: str = REPO, commit: str = COMMIT, path: str = PATH, link: str | None = None) -> dict:
+    """A Curate item.json for one skill version."""
+    return {"columns": COLUMNS, "values": {"Repository": repo, "Commit": commit, "Folder": path, "Skill": link or f"https://github.com/{repo}/tree/{commit}/{path}"}}
+
+
+def evidence_file(quote: str, file: str = "SKILL.md") -> dict:
+    """A Curate evidence file carrying the accusation."""
+    return {"title": f"Malicious passage in {file}", "description": quote, "file": file, "quote": quote}
 
 
 ITEM = "0x" + "11" * 32

@@ -384,7 +384,7 @@ def test_validators_agree_with_a_transient_leader_only_when_they_fail_too(court,
 
 def test_views(court, direct_vm):
     assert court.get_verdict(1) == {"judged": False}
-    assert court.get_config() == {"registry": REGISTRY, "arbitrator": ARBITRATOR, "chain": "sepolia", "rpc": "https://ethereum-sepolia-rpc.publicnode.com", "verdicts": 0}
+    assert court.get_config() == {"registry": REGISTRY, "arbitrator": ARBITRATOR, "chain": "sepolia", "rpc": "https://ethereum-sepolia-rpc.publicnode.com", "ipfs_gateway": "https://cdn.kleros.link", "verdicts": 0}
     stage_registration(direct_vm, ACCUSE)
     mock_verdict(direct_vm, "MALICIOUS")
     judge(court)

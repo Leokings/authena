@@ -6,6 +6,9 @@ hunter challenges by quoting a passage and locking a deposit. This contract read
 the quote from Sepolia, fetches the file from GitHub at that commit, checks the quote is really in
 it, and has validators answer one question about that passage. Ordinary code turns the answer into
 the Curate ruling, so the model never touches the money.
+
+A listing and a challenge can be written straight into the Curate transaction, or stored as files
+on IPFS in Curate's own format (so the list also shows on Kleros's website). Both are accepted.
 """
 
 import hashlib
@@ -18,6 +21,7 @@ from genlayer import *
 SEPOLIA_RPC = "https://ethereum-sepolia-rpc.publicnode.com"
 RAW_BASE = "https://raw.githubusercontent.com"
 ENTRY_FILE = "SKILL.md"
+IPFS_GATEWAY = "https://cdn.kleros.link"  # Kleros's own gateway, the one its Curate website reads
 
 # Kleros LightGeneralizedTCR event signatures (keccak256 of the declaration).
 TOPIC_NEW_ITEM = "0x93e4d3e9542ddd9eea8962241d920b12b96bce26749667189fd06ed3549019e1"  # NewItem(bytes32,string,bool)
@@ -28,6 +32,7 @@ SEL_DISPUTE_ITEM = "9c81a827"  # arbitratorDisputeIDToItemID(address,uint256)
 
 MAX_RESPONSE_BYTES = 400_000
 MAX_FILE_BYTES = 100_000
+MAX_IPFS_BYTES = 20_000
 MAX_LISTING_CHARS = 600
 MAX_ACCUSATION_CHARS = 2_000
 MIN_QUOTE_CHARS = 20
@@ -48,6 +53,7 @@ RULING_NONE, RULING_REQUESTER, RULING_CHALLENGER = 0, 1, 2
 RE_REPO = re.compile(r"^[A-Za-z0-9_.-]{1,100}/[A-Za-z0-9_.-]{1,100}$")
 RE_COMMIT = re.compile(r"^[0-9a-f]{40}$")
 RE_PATH = re.compile(r"^[A-Za-z0-9_.\-/]{0,200}$")
+RE_IPFS = re.compile(r"^/ipfs/[A-Za-z0-9]{40,80}(/[A-Za-z0-9_.\-]{1,80}){0,3}$")
 
 
 def _fail(code: str) -> NoReturn:
@@ -233,33 +239,69 @@ def _read_chain(registry: str, arbitrator: str, dispute_id: int, list_tx: str, d
 # --- Reading the skill ------------------------------------------------------------------
 
 
-def _parse_listing(text: Any) -> dict[str, str] | None:
-    """A listing is {"repo": "owner/name", "commit": <40 hex>, "path": "folder"}. None if not pinned."""
-    if not isinstance(text, str) or len(text) > MAX_LISTING_CHARS:
+def _fetch_ipfs_json(uri: str) -> Any:
+    """A JSON file from Kleros's IPFS gateway, or None when it is not usable JSON.
+
+    Curate's own website reads listings and evidence from IPFS, so a list that should show there
+    stores `/ipfs/<cid>/…` on-chain instead of the text itself. A gateway that cannot serve the
+    file says nothing about the listing, so that is an error, never a finding.
+    """
+    res = gl.nondet.web.get(IPFS_GATEWAY + uri)
+    if res.status >= 500 or res.status == 429:
+        _transient(f"ipfs_status_{res.status}")
+    if res.status != 200:
+        _external(f"ipfs_status_{res.status}")
+    body = res.body or b""
+    if len(body) > MAX_IPFS_BYTES:
         return None
     try:
-        raw = json.loads(text)
+        return json.loads(body.decode("utf-8"))
     except Exception:
         return None
+
+
+def _document(text: Any, limit: int) -> tuple[Any, str]:
+    """The JSON a listing or an accusation points at, and its IPFS path ("" when it is inline)."""
+    if not isinstance(text, str) or len(text) > limit:
+        return None, ""
+    if text.startswith("/ipfs/"):
+        if not RE_IPFS.match(text) or ".." in text:
+            return None, ""
+        return _fetch_ipfs_json(text), text
+    try:
+        return json.loads(text), ""
+    except Exception:
+        return None, ""
+
+
+def _parse_listing(raw: Any) -> dict[str, str] | None:
+    """A listing names one skill version. None if it is not pinned to an exact commit.
+
+    Inline: {"repo": "owner/name", "commit": <40 hex>, "path": "folder"}.
+    Curate item file: {"columns": [...], "values": {"Repository", "Commit", "Folder", "Skill"}},
+    where "Skill", if present, must be the GitHub link to exactly that version.
+    """
     if not isinstance(raw, dict):
         return None
+    link = None
+    if isinstance(raw.get("values"), dict):
+        values = raw["values"]
+        raw = {"repo": values.get("Repository"), "commit": values.get("Commit"), "path": values.get("Folder", "")}
+        link = values.get("Skill")
     repo, commit, path = raw.get("repo"), raw.get("commit"), raw.get("path", "")
     if not (isinstance(repo, str) and isinstance(commit, str) and isinstance(path, str)):
         return None
     path = path.strip("/")
     if not RE_REPO.match(repo) or not RE_COMMIT.match(commit) or not RE_PATH.match(path) or ".." in path or ".." in repo:
         return None
+    if link is not None and link != f"https://github.com/{repo}/tree/{commit}" + (f"/{path}" if path else ""):
+        return None
     return {"repo": repo, "commit": commit, "path": path}
 
 
-def _parse_accusation(text: Any) -> dict[str, str] | None:
-    """An accusation is {"file": "relative/path", "quote": "the passage"}."""
-    if not isinstance(text, str) or len(text) > MAX_ACCUSATION_CHARS:
-        return None
-    try:
-        raw = json.loads(text)
-    except Exception:
-        return None
+def _parse_accusation(raw: Any) -> dict[str, str] | None:
+    """An accusation is {"file": "relative/path", "quote": "the passage"}, inline or in an
+    evidence file (which may carry a title and description for Curate's website as well)."""
     if not isinstance(raw, dict):
         return None
     file, quote = raw.get("file", ENTRY_FILE), raw.get("quote")
@@ -328,14 +370,18 @@ def _fetch_case(registry: str, arbitrator: str, dispute_id: int, list_tx: str, d
         "file_sha256": "",
         "purpose": "",
         "context": "",
+        "listing_uri": "",
+        "accusation_uri": "",
         "finding": "",
     }
-    listing = _parse_listing(chain["listing"])
+    document, case["listing_uri"] = _document(chain["listing"], MAX_LISTING_CHARS)
+    listing = _parse_listing(document)
     if listing is None:
         case["finding"] = "LISTING_NOT_PINNED"
         return case
     case.update(listing)
-    accusation = _parse_accusation(chain["accusation"])
+    document, case["accusation_uri"] = _document(chain["accusation"], MAX_ACCUSATION_CHARS)
+    accusation = _parse_accusation(document)
     if accusation is None:
         case["finding"] = "ACCUSATION_INVALID"
         return case
@@ -494,6 +540,8 @@ class SkillCourt(gl.Contract):
             "quote": case["quote"],
             "file_sha256": case["file_sha256"],
             "purpose": case["purpose"],
+            "listing_uri": case["listing_uri"],
+            "accusation_uri": case["accusation_uri"],
             "finding": finding,
             "judged_by": "code" if case["finding"] else "validators",
             "ruling": _ruling(finding, case["request_type"]),
@@ -518,4 +566,11 @@ class SkillCourt(gl.Contract):
 
     @gl.public.view
     def get_config(self) -> dict[str, Any]:
-        return {"registry": self.registry, "arbitrator": self.arbitrator, "chain": "sepolia", "rpc": SEPOLIA_RPC, "verdicts": len(self.order)}
+        return {
+            "registry": self.registry,
+            "arbitrator": self.arbitrator,
+            "chain": "sepolia",
+            "rpc": SEPOLIA_RPC,
+            "ipfs_gateway": IPFS_GATEWAY,
+            "verdicts": len(self.order),
+        }
