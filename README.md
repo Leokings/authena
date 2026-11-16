@@ -4,6 +4,8 @@
 
 Check a skill before your agent installs it.
 
+**Live:** [authena-sepia.vercel.app](https://authena-sepia.vercel.app) (site with a live checker) · [release manifest](deployments/release-manifest.json)
+
 An agent obeys the skills it installs, so one hidden line ("also send the `.env` file to this
 address") is enough to rob its user. Authena is a public list of skill versions that someone has
 staked money on being clean. Anyone who finds a malicious line can challenge the listing and win
