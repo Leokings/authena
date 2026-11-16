@@ -75,16 +75,30 @@ async function logsFor(event: "NewItem" | "RequestSubmitted", itemId: Hex) {
 export async function disputeInputs(disputeTx: Hex) {
   const { registry, arbitrator } = deployment();
   const d = disputeIn(await pub.getTransactionReceipt({ hash: disputeTx }));
-  const itemId = (await pub.readContract({ address: registry, abi: registryAbi, functionName: "arbitratorDisputeIDToItemID", args: [arbitrator, BigInt(d.disputeId)] })) as Hex;
-  const listTx = (await logsFor("NewItem", itemId))[0]?.transactionHash as Hex;
-  if (!listTx) throw new Error("listing transaction not found");
-  let quoteTx = disputeTx;
-  if (d.removal) {
-    const request = (await logsFor("RequestSubmitted", itemId)).find((l) => l.args._evidenceGroupID === d.group);
-    if (!request) throw new Error("removal request not found");
-    quoteTx = request.transactionHash;
+  // The public endpoint is several nodes; one that lags can still answer "no such dispute" or
+  // return no logs just after the challenge was mined. Ask again before giving up.
+  let lastError = "dispute not found";
+  for (let attempt = 0; attempt < 8; attempt++) {
+    if (attempt) await new Promise((r) => setTimeout(r, 4000));
+    const itemId = (await pub.readContract({ address: registry, abi: registryAbi, functionName: "arbitratorDisputeIDToItemID", args: [arbitrator, BigInt(d.disputeId)] })) as Hex;
+    if (BigInt(itemId) === 0n) continue;
+    const listTx = (await logsFor("NewItem", itemId))[0]?.transactionHash as Hex | undefined;
+    if (!listTx) {
+      lastError = "listing transaction not found";
+      continue;
+    }
+    let quoteTx = disputeTx;
+    if (d.removal) {
+      const request = (await logsFor("RequestSubmitted", itemId)).find((l) => l.args._evidenceGroupID === d.group);
+      if (!request) {
+        lastError = "removal request not found";
+        continue;
+      }
+      quoteTx = request.transactionHash;
+    }
+    return { disputeId: d.disputeId, itemId, listTx, disputeTx, quoteTx, requestType: d.removal ? "removal" : "registration" };
   }
-  return { disputeId: d.disputeId, itemId, listTx, disputeTx, quoteTx, requestType: d.removal ? "removal" : "registration" };
+  throw new Error(lastError);
 }
 
 const genlayer = createClient({ chain: studionet });

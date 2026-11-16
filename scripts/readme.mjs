@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Fills the README's live sections from deployments/release-manifest.json.
-import { readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 
 const m = JSON.parse(readFileSync("deployments/release-manifest.json", "utf8"));
 let readme = readFileSync("README.md", "utf8");
@@ -31,5 +31,14 @@ set(
     "\n",
 );
 set("GUARDS", m.genlayer_steps.filter((s) => s.expected_failure).map((s) => link(`\`${s.expected_error.replace("[EXPECTED] ", "")}\``, s.explorer)).join(", ") + ".");
+if (existsSync("deployments/judgment-tests.json")) {
+  const t = JSON.parse(readFileSync("deployments/judgment-tests.json", "utf8"));
+  set(
+    "TESTS",
+    "\n| Test skill | Why | Expected | Got | Links |\n|---|---|---|---|---|\n" +
+      t.results.map((r) => `| \`${r.id}\` | ${r.why.replaceAll("|", "\\|")} | \`${r.expected}\` | \`${r.got}\`${r.pass ? "" : " ✗"} | ${[link("judged", r.genlayer_tx), link("ruled", r.ruling_tx)].filter(Boolean).join(" · ")} |`).join("\n") +
+      `\n\n${t.results.filter((r) => r.pass).length} of ${t.results.length} as expected.\n`,
+  );
+}
 writeFileSync("README.md", readme);
 console.log("README updated");

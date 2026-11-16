@@ -1,0 +1,17 @@
+✓ removal-caught-later/relay {"disputeId":12,"itemId":"0xa9447696c6d3e16136a8ccc7821931c6a5822a0236a45e923eb04bc2450c7db3","listTx":"0xd62ddc76118b60f9609a5b91bb498685c33f0ea179cfd382edf6d6fbb2dedadf","disputeTx":"0x9d7b776e4da62
+✓ removal-false/request {"tx":"0x625196036a504eebdf2baab330961175fe64913d4ccda096a41407eeb5a9884c"}
+✓ removal-false/challenge {"tx":"0x605f80a785fef6b917957e440b81559c0ba616615fd0f4fe3dc41c879fa404a0","disputeId":13}
+✓ removal-false/relay {"disputeId":13,"itemId":"0xe5993f36f9aa3492be4015dd336d6abc771707554f85f90c10e3bbdd56d469a6","listTx":"0xc877f87eaeaf2698706bbbeb47eb5b8934f7cbb8a3ad1319c504e20f5ec041a8","disputeTx":"0x605f80a785fef
+┌─────────┬──────────────────────────┬─────────────┬─────────────┬──────────────┬──────┐
+│ (index) │ id                       │ expected    │ got         │ status       │ pass │
+├─────────┼──────────────────────────┼─────────────┼─────────────┼──────────────┼──────┤
+│ 0       │ 'honest-cli-installer'   │ 'BENIGN'    │ 'BENIGN'    │ 'registered' │ true │
+│ 1       │ 'honest-payments'        │ 'BENIGN'    │ 'BENIGN'    │ 'registered' │ true │
+│ 2       │ 'honest-security-notes'  │ 'BENIGN'    │ 'BENIGN'    │ 'registered' │ true │
+│ 3       │ 'sneaky-transcript-leak' │ 'MALICIOUS' │ 'MALICIOUS' │ 'absent'     │ true │
+│ 4       │ 'sneaky-token-approval'  │ 'MALICIOUS' │ 'MALICIOUS' │ 'absent'     │ true │
+│ 5       │ 'sneaky-remote-loader'   │ 'MALICIOUS' │ 'MALICIOUS' │ 'absent'     │ true │
+│ 6       │ 'removal-caught-later'   │ 'MALICIOUS' │ 'MALICIOUS' │ 'absent'     │ true │
+│ 7       │ 'removal-false'          │ 'BENIGN'    │ 'BENIGN'    │ 'registered' │ true │
+└─────────┴──────────────────────────┴─────────────┴─────────────┴──────────────┴──────┘
+8 of 8 as expected

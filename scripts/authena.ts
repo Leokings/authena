@@ -26,9 +26,11 @@ const canonical = (repo: string, commit: string, folder = "") => {
   if (!/^[0-9a-f]{40}$/.test(commit)) throw new Error("commit must be the full 40-character hash, so the content cannot change");
   return listingOf(repo, commit, folder.replace(/^\/+|\/+$/g, ""));
 };
+// Exit codes are set, not forced: calling process.exit() while sockets are still closing crashes
+// Node on Windows (exit 127), which would break "exit 0 only if listed".
 const usage = () => {
   console.error("usage: authena check|list|challenge|remove|verdict|relay … (see the header of scripts/authena.ts)");
-  process.exit(2);
+  process.exitCode = 2;
 };
 
 try {
@@ -37,8 +39,9 @@ try {
     const itemId = itemIdOf(listing);
     const s = await status(itemId);
     console.log(JSON.stringify({ listing: JSON.parse(listing), itemId, status: s, safeToInstall: s === "registered", registry: deployment().registry }, null, 2));
-    process.exit(s === "registered" ? 0 : 1);
+    process.exitCode = s === "registered" ? 0 : 1;
   } else if (cmd === "verdict" && args.length === 1) {
+    if (!/^\d+$/.test(args[0])) throw new Error("the dispute ID must be a whole number");
     console.log(JSON.stringify(await verdict(Number(args[0])), null, 2));
   } else if (cmd === "list" && args.length >= 2) {
     const listing = canonical(args[0], args[1], args[2]);
@@ -58,5 +61,5 @@ try {
   } else usage();
 } catch (e) {
   console.error(`error: ${(e as Error).message.split("\n")[0]}`);
-  process.exit(2);
+  process.exitCode = 2;
 }

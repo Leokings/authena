@@ -1,0 +1,34 @@
+✓ removal-caught-later/list {"tx":"0xd62ddc76118b60f9609a5b91bb498685c33f0ea179cfd382edf6d6fbb2dedadf","itemId":"0xa9447696c6d3e16136a8ccc7821931c6a5822a0236a45e923eb04bc2450c7db3"}
+✓ honest-cli-installer/list {"tx":"0xdf3ed35075113d85342935d6ffd3c65bb28a3ff5520bf616cd520a0b512a63d4","itemId":"0x8179acc1df5e5c7d7ae2411807db5b6419ccb23574645651330912a75aeb1bfc"}
+✓ honest-payments/list {"tx":"0xc877f87eaeaf2698706bbbeb47eb5b8934f7cbb8a3ad1319c504e20f5ec041a8","itemId":"0xe5993f36f9aa3492be4015dd336d6abc771707554f85f90c10e3bbdd56d469a6"}
+✓ honest-security-notes/list {"tx":"0x5e3c93698ff2d51e21b6fcd327ee450764247938f89893899b2529a4723881b3","itemId":"0x533525530c1818d4668c7bba1dc1b75b786010cdf3e7f2f1a57455d89f4db65d"}
+✓ sneaky-transcript-leak/list {"tx":"0xf3294e51454f34af2ad7527841b684f6f64a1c6abf664c88fa6a34cb10e52668","itemId":"0x90a3a078bcfb2f6150d8855f03a24830b5b24d70e2d98e95a4ce4264d549b9c2"}
+✓ sneaky-token-approval/list {"tx":"0xd31e6c6fd13ee4e4472f41b643edf5b5e927af1739af323183545e577a29aefa","itemId":"0x8e32191fca0e06aeac270cde505dd521e76e82a0bccb5f6d80035871ccc485ba"}
+✓ sneaky-remote-loader/list {"tx":"0x7f152414f7450fc3da99a028bb13192250ab81815f6f01a611c4598c070171b6","itemId":"0xea7574649b8f2e8f29d3b050996fe282f13ae83472b15f1caeb286835424f93c"}
+✓ honest-cli-installer/challenge {"tx":"0x6bc4d0ebd2216ec528c045f3680da35a64ba185f2d92a76b0b75879f46c06ae8","disputeId":6}
+✓ honest-payments/challenge {"tx":"0xca4b92df00b711a9806243a5e9192942342ed38e210173910d0522763f4c3816","disputeId":7}
+✓ honest-security-notes/challenge {"tx":"0xe3128f63301c63d642269192e19001bd93ef0b56fab7d49df3a2037b2b90ba13","disputeId":8}
+✓ sneaky-transcript-leak/challenge {"tx":"0x1bb538e7fe670929eaae273bf0265ecbcb7d7be87418058bdad7f84a9aaa3aa6","disputeId":9}
+✓ sneaky-token-approval/challenge {"tx":"0x3bbe8ece7c6044ac5af4d6f8ce8741b5a3304368e2a52ae983a1019da16c4107","disputeId":10}
+✓ sneaky-remote-loader/challenge {"tx":"0x47e412a130d759c3b9580727df28f67a2972fe38502d1fa227b36d0d1beb8ace","disputeId":11}
+✓ honest-cli-installer/relay {"disputeId":6,"itemId":"0x8179acc1df5e5c7d7ae2411807db5b6419ccb23574645651330912a75aeb1bfc","listTx":"0xdf3ed35075113d85342935d6ffd3c65bb28a3ff5520bf616cd520a0b512a63d4","disputeTx":"0x6bc4d0ebd2216e
+✓ honest-payments/relay {"disputeId":7,"itemId":"0xe5993f36f9aa3492be4015dd336d6abc771707554f85f90c10e3bbdd56d469a6","listTx":"0xc877f87eaeaf2698706bbbeb47eb5b8934f7cbb8a3ad1319c504e20f5ec041a8","disputeTx":"0xca4b92df00b711
+✓ honest-security-notes/relay {"disputeId":8,"itemId":"0x533525530c1818d4668c7bba1dc1b75b786010cdf3e7f2f1a57455d89f4db65d","listTx":"0x5e3c93698ff2d51e21b6fcd327ee450764247938f89893899b2529a4723881b3","disputeTx":"0xe3128f63301c63
+✓ sneaky-transcript-leak/relay {"disputeId":9,"itemId":"0x90a3a078bcfb2f6150d8855f03a24830b5b24d70e2d98e95a4ce4264d549b9c2","listTx":"0xf3294e51454f34af2ad7527841b684f6f64a1c6abf664c88fa6a34cb10e52668","disputeTx":"0x1bb538e7fe6709
+✓ sneaky-token-approval/relay {"disputeId":10,"itemId":"0x8e32191fca0e06aeac270cde505dd521e76e82a0bccb5f6d80035871ccc485ba","listTx":"0xd31e6c6fd13ee4e4472f41b643edf5b5e927af1739af323183545e577a29aefa","disputeTx":"0x3bbe8ece7c604
+✓ sneaky-remote-loader/relay {"disputeId":11,"itemId":"0xea7574649b8f2e8f29d3b050996fe282f13ae83472b15f1caeb286835424f93c","listTx":"0x7f152414f7450fc3da99a028bb13192250ab81815f6f01a611c4598c070171b6","disputeTx":"0x47e412a130d75
+✓ removal-caught-later/execute {"tx":"0x744810cc0688bde1d7999d2ac4101e4f03ea84ffbcaefc041e1b5740ff805261"}
+✓ removal-caught-later/request {"tx":"0x24beb4c8440af0867bc821ccf3042ba83f37a815288f3c478bd76c9286390c83"}
+✓ removal-caught-later/challenge {"tx":"0x9d7b776e4da628ea790d6cf4d7cb482530c7689249cdae41f9289a68ac43de46","disputeId":12}
+C:\Users\leoki\Genlayer\authena\scripts\curate-lib.ts:80
+  if (!listTx) throw new Error("listing transaction not found");
+                     ^
+
+Error: listing transaction not found
+    at disputeInputs (C:\Users\leoki\Genlayer\authena\scripts\curate-lib.ts:80:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async relay (C:\Users\leoki\Genlayer\authena\scripts\curate-lib.ts:109:18)
+    at async step (C:\Users\leoki\Genlayer\authena\scripts\judge-cases.ts:29:23)
+    at async <anonymous> (C:\Users\leoki\Genlayer\authena\scripts\judge-cases.ts:61:1)
+
+Node.js v24.19.0

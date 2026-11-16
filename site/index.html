@@ -3,180 +3,195 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Authena — check a skill before your agent installs it</title>
-<meta name="description" content="A public list of AI-agent skills that are safe to install. A Kleros Curate list, judged by GenLayer validators.">
+<title>Authena — is that skill safe?</title>
+<meta name="description" content="Check an AI-agent skill before you install it. A Kleros Curate list, judged by GenLayer.">
 <link rel="icon" href="mark.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#fff;--soft:#f6f8f7;--line:#e3e8e5;--fg:#0c1512;--muted:#5b6964;--accent:#0a7f5a;--accent-soft:#e7f5ef;--bad:#c2302b;--bad-soft:#fdecec;--warn:#9a6700;--warn-soft:#fff6dc;--mono:"Geist Mono",ui-monospace,Menlo,monospace}
+:root{--paper:#fffaf0;--ink:#16130f;--mint:#7be0b0;--mint-d:#0b7a50;--coral:#ff7a66;--coral-d:#b3261a;--sun:#ffd84d;--violet:#8f7bff;--sky:#9fd8ff;--line:#16130f;--muted:#5d564c;--disp:"Bricolage Grotesque",system-ui,sans-serif;--mono:"Geist Mono",ui-monospace,Menlo,monospace}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 Geist,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 Geist,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 a{color:inherit}
-.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
-nav{position:sticky;top:0;background:rgba(255,255,255,.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);z-index:5}
-nav .wrap{display:flex;align-items:center;gap:20px;height:60px}
-.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;text-decoration:none;margin-right:auto}
-.brand img{width:28px;height:28px}
-nav a.link{color:var(--muted);text-decoration:none;font-size:14px}
-nav a.link:hover{color:var(--fg)}
-.btn{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 16px;border-radius:10px;border:1px solid var(--fg);background:var(--fg);color:#fff;font:600 14px Geist,sans-serif;cursor:pointer;text-decoration:none}
-.btn.ghost{background:#fff;color:var(--fg);border-color:var(--line)}
-.btn:focus-visible,input:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-header.hero{padding:64px 0 40px}
-.eyebrow{font:500 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
-h1{font-size:clamp(34px,5.4vw,56px);line-height:1.05;letter-spacing:-.03em;margin:14px 0 16px;max-width:15ch}
-.lede{font-size:19px;color:var(--muted);max-width:60ch;margin:0}
-.check{margin-top:32px;border:1px solid var(--line);border-radius:16px;padding:20px;background:var(--soft)}
-.check h2{font-size:16px;margin:0 0 12px}
-.fields{display:grid;grid-template-columns:1.2fr 1.6fr 1.4fr auto;gap:10px}
-label{display:block;font:500 12px var(--mono);color:var(--muted);margin-bottom:4px}
-input{width:100%;min-height:42px;border:1px solid var(--line);border-radius:10px;padding:0 12px;font:14px var(--mono);background:#fff;color:var(--fg)}
-.fields .btn{align-self:end}
-.examples{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;font-size:13px;color:var(--muted);align-items:center}
-.chip{border:1px solid var(--line);background:#fff;border-radius:999px;min-height:36px;padding:0 12px;font:13px Geist,sans-serif;cursor:pointer;color:var(--fg)}
-.chip:hover{border-color:var(--fg)}
-#result{margin-top:14px;display:none;border-radius:12px;padding:14px 16px;border:1px solid var(--line);background:#fff}
-#result.ok{border-color:#9ad3bd;background:var(--accent-soft)}
-#result.no{border-color:#f0b4b1;background:var(--bad-soft)}
-#result.wait{border-color:#ecd58a;background:var(--warn-soft)}
-#result strong{display:block;font-size:17px}
-#result span{font-size:14px;color:var(--muted);word-break:break-word}
-section{padding:48px 0;border-top:1px solid var(--line)}
-h2.t{font-size:28px;letter-spacing:-.02em;margin:8px 0 8px}
-p.s{color:var(--muted);margin:0 0 24px;max-width:64ch}
+.wrap{max-width:1060px;margin:0 auto;padding:0 20px}
+.card{background:#fff;border:2.5px solid var(--line);border-radius:18px;box-shadow:5px 5px 0 var(--line)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 18px;border:2.5px solid var(--line);border-radius:14px;background:var(--ink);color:#fff;font:600 15px Geist,sans-serif;cursor:pointer;text-decoration:none;box-shadow:3px 3px 0 var(--line);transition:transform .12s,box-shadow .12s}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--line)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--line)}
+.btn.y{background:var(--sun);color:var(--ink)}
+.btn.w{background:#fff;color:var(--ink)}
+:focus-visible{outline:3px solid var(--violet);outline-offset:3px}
+nav .wrap{display:flex;align-items:center;gap:14px;height:68px}
+.brand{display:flex;align-items:center;gap:10px;font:800 22px var(--disp);text-decoration:none;margin-right:auto}
+.brand img{width:32px;height:32px}
+nav a.l{font-weight:500;font-size:15px;text-decoration:none;padding:8px 6px}
+nav a.l:hover{text-decoration:underline;text-underline-offset:4px}
+
+.hero{padding:26px 0 54px}
+.hero .wrap{display:grid;grid-template-columns:1.25fr .75fr;gap:24px;align-items:center}
+.hero .wrap>div{min-width:0}
+h1{font:800 clamp(44px,8vw,88px)/.92 var(--disp);letter-spacing:-.03em;margin:0 0 14px}
+h1 em{font-style:normal;background:var(--sun);padding:0 .12em;border-radius:.14em;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.sub{font-size:19px;color:var(--muted);margin:0 0 22px;max-width:36ch}
+.owl{width:100%;max-width:300px;justify-self:center;filter:drop-shadow(6px 6px 0 var(--line))}
+.owl .pupil{transition:transform .08s linear}
+.owl.blink .lid{transform:scaleY(1)}
+.lid{transform:scaleY(0);transform-box:fill-box;transform-origin:center top;transition:transform .09s}
+
+.check{padding:16px;display:flex;gap:10px;flex-wrap:wrap}
+.check input{flex:1 1 260px;min-width:0;min-height:48px;border:2.5px solid var(--line);border-radius:12px;padding:0 14px;font:14px var(--mono);background:var(--paper);color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;align-items:center;font-size:14px;color:var(--muted)}
+.chip{border:2px solid var(--line);background:#fff;border-radius:999px;min-height:38px;padding:0 13px;font:500 13px var(--mono);cursor:pointer;color:var(--ink)}
+.chip:hover{background:var(--sky)}
+#out{margin-top:16px;display:none;align-items:center;gap:16px;padding:14px 16px}
+#out.show{display:flex}
+#out p{margin:0;font-size:15px}
+#out small{display:block;color:var(--muted);font:12px var(--mono);word-break:break-all;margin-top:2px}
+.stamp{flex:none;font:800 20px var(--disp);letter-spacing:.06em;padding:8px 14px;border:3.5px solid currentColor;border-radius:10px;transform:rotate(-7deg);text-transform:uppercase;white-space:nowrap}
+.stamp.go{animation:thump .34s cubic-bezier(.2,1.6,.4,1)}
+@keyframes thump{0%{transform:rotate(-7deg) scale(2.4);opacity:0}100%{transform:rotate(-7deg) scale(1);opacity:1}}
+.ok{color:var(--mint-d)}.bad{color:var(--coral-d)}.hm{color:#8a6100}
+
+.tape{background:var(--ink);color:var(--sun);border-block:2.5px solid var(--line);overflow:hidden;white-space:nowrap;font:500 14px var(--mono);padding:10px 0}
+.tape div{display:inline-block;padding-left:100%;animation:run 38s linear infinite}
+.tape b{color:#fff;font-weight:500}
+.tape i{font-style:normal;color:var(--mint)}
+.tape u{text-decoration:none;color:var(--coral)}
+@keyframes run{to{transform:translateX(-100%)}}
+
+section{padding:56px 0}
+h2{font:800 clamp(30px,4.6vw,46px)/1 var(--disp);letter-spacing:-.02em;margin:0 0 22px}
 .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.step{border:1px solid var(--line);border-radius:14px;padding:16px}
-.step b{display:block;font:500 12px var(--mono);color:var(--accent);margin-bottom:6px}
-.step h3{margin:0 0 6px;font-size:16px}
-.step p{margin:0;color:var(--muted);font-size:14px}
-.cases{display:grid;gap:14px}
-.case{border:1px solid var(--line);border-radius:14px;padding:18px}
-.case header{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin-bottom:8px}
-.case h3{margin:0;font-size:17px;margin-right:auto}
-.badge{font:500 12px var(--mono);border-radius:999px;padding:4px 10px;border:1px solid var(--line);white-space:nowrap}
-.badge.ok{background:var(--accent-soft);border-color:#9ad3bd;color:#075d42}
-.badge.bad{background:var(--bad-soft);border-color:#f0b4b1;color:var(--bad)}
-.badge.warn{background:var(--warn-soft);border-color:#ecd58a;color:var(--warn)}
-.case p{margin:0 0 10px;color:var(--muted);font-size:15px}
-.kv{display:grid;grid-template-columns:120px 1fr;gap:4px 12px;font-size:14px}
-.kv dt{color:var(--muted)}
-.kv dd{margin:0;font-family:var(--mono);font-size:13px;word-break:break-word}
-blockquote{margin:10px 0;padding:10px 12px;border-left:3px solid var(--bad);background:var(--bad-soft);font:13px/1.5 var(--mono);border-radius:0 8px 8px 0;word-break:break-word}
-blockquote.neutral{border-left-color:var(--line);background:var(--soft)}
-.links{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:13px}
-.links a{color:var(--accent);text-underline-offset:3px}
-.note{font-size:13px;color:var(--muted);margin-top:14px}
-pre{background:#0c1512;color:#e6f0ec;border-radius:12px;padding:16px;overflow:auto;font:13px/1.6 var(--mono);margin:0 0 12px}
-.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-.cols>div,.steps>div,.case{min-width:0}
-ul.plain{margin:0;padding-left:18px;color:var(--muted)}
-ul.plain li{margin-bottom:6px}
-.partners{display:flex;flex-wrap:wrap;gap:28px;align-items:center}
-.partners img{height:30px;width:auto}
-footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);font-size:14px}
-footer .wrap{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center}
-@media (max-width:820px){.fields{grid-template-columns:1fr}.steps{grid-template-columns:1fr 1fr}.cols{grid-template-columns:1fr}nav a.link{display:none}.kv{grid-template-columns:1fr}.kv dt{margin-top:6px}}
-@media (max-width:480px){.steps{grid-template-columns:1fr}header.hero{padding-top:40px}}
+.step{padding:16px;min-width:0}
+.step:nth-child(1){background:var(--sky)}.step:nth-child(2){background:var(--sun)}.step:nth-child(3){background:#d9d2ff}.step:nth-child(4){background:var(--mint)}
+.step b{font:800 34px var(--disp);display:block;line-height:1}
+.step h3{margin:8px 0 2px;font:800 19px var(--disp)}
+.step p{margin:0;font-size:14px}
+
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.case{padding:18px;min-width:0;position:relative;transition:transform .15s}
+.case:hover{transform:rotate(-.6deg) translateY(-3px)}
+.case .stamp{position:absolute;top:14px;right:14px;font-size:15px;padding:5px 10px;border-width:3px;background:#fff}
+.case h3{font:800 20px/1.15 var(--disp);margin:0 110px 6px 0;word-break:break-word}
+.case .who{font:12px var(--mono);color:var(--muted);margin:0 0 10px;word-break:break-word}
+.quote{font:13px/1.5 var(--mono);padding:10px 12px;border-radius:10px;border:2px dashed var(--line);margin:0 0 12px;word-break:break-word;background:#fff3f0}
+.quote.g{background:#eefbf4}
+.pills{display:flex;flex-wrap:wrap;gap:6px}
+.pill{display:inline-flex;align-items:center;font:500 12px var(--mono);border:2px solid var(--line);border-radius:999px;padding:0 10px;text-decoration:none;background:#fff;min-height:32px}
+.pill:hover{background:var(--sun)}
+.more{margin-top:18px;font:13px var(--mono);color:var(--muted)}
+.more a{text-underline-offset:3px}
+
+.hunt{background:var(--violet);border-block:2.5px solid var(--line)}
+.hunt .wrap{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center}
+.hunt .wrap>*{min-width:0}
+.hunt h2{color:#fff;text-shadow:3px 3px 0 var(--line)}
+pre{background:var(--ink);color:#f5f0e6;border:2.5px solid var(--line);border-radius:14px;padding:16px;overflow:auto;font:13px/1.65 var(--mono);margin:0;box-shadow:5px 5px 0 var(--line)}
+pre i{font-style:normal;color:var(--sun)}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+
+.kleros{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center}
+.kleros>*{min-width:0}
+.kleros img.shot{width:100%;border:2.5px solid var(--line);border-radius:14px;box-shadow:5px 5px 0 var(--line);display:block}
+.logos{display:flex;flex-wrap:wrap;gap:26px;align-items:center;margin-top:8px}
+.logos img{height:28px;width:auto}
+.logos span{display:inline-flex;align-items:center;gap:8px;font:600 20px Geist;color:#4a4b4f}
+footer{border-top:2.5px solid var(--line);padding:22px 0 36px;font:13px var(--mono);color:var(--muted)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:10px 18px;justify-content:space-between}
+
+@media (max-width:860px){.hero .wrap,.hunt .wrap,.kleros{grid-template-columns:1fr}.owl{max-width:170px;order:-1;justify-self:start}.steps{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}nav a.l{display:none}}
+@media (max-width:460px){.steps{grid-template-columns:1fr}#out{flex-direction:column;align-items:flex-start}.stamp{font-size:17px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.tape div{padding-left:0}}
 </style>
 </head>
 <body>
 <nav><div class="wrap">
   <a class="brand" href="#"><img src="mark.svg" alt="">Authena</a>
-  <a class="link" href="#how">How it works</a>
-  <a class="link" href="#cases">Live cases</a>
-  <a class="link" href="#use">Use it</a>
-  <a class="btn ghost" href="https://github.com/Leokings/authena">GitHub</a>
+  <a class="l" href="#cases">Cases</a>
+  <a class="l" href="#hunt">Hunt</a>
+  <a class="l" href="#kleros">Kleros</a>
+  <a class="btn w" href="https://github.com/Leokings/authena">GitHub</a>
 </div></nav>
 
 <header class="hero"><div class="wrap">
-  <div class="eyebrow">Internet Court × Kleros × GenLayer</div>
-  <h1>Check a skill before your agent installs it.</h1>
-  <p class="lede">An agent obeys the skills it installs. Authena is a public list of skill versions that someone has staked money on being clean. Anyone who finds a malicious line can challenge it and win the stake.</p>
-
-  <div class="check" id="check">
-    <h2>Is this skill version on the list?</h2>
-    <form id="form" class="fields">
-      <div><label for="repo">Repository</label><input id="repo" placeholder="owner/name" required autocomplete="off"></div>
-      <div><label for="commit">Commit (40 characters)</label><input id="commit" placeholder="full commit hash" required autocomplete="off"></div>
-      <div><label for="folder">Skill folder</label><input id="folder" placeholder="path/to/skill" autocomplete="off"></div>
-      <button class="btn" type="submit">Check</button>
+  <div>
+    <h1>Is that skill <em>safe?</em></h1>
+    <p class="sub">Check before your agent installs it.</p>
+    <form id="form" class="card check">
+      <input id="q" aria-label="GitHub link to the skill folder at a commit" placeholder="github.com/owner/repo/tree/&lt;commit&gt;/skill-folder" autocomplete="off" spellcheck="false" required>
+      <button class="btn y" type="submit">Check</button>
     </form>
-    <div class="examples" id="examples">Try:</div>
-    <div id="result" role="status" aria-live="polite"><strong></strong><span></span></div>
+    <div class="chips" id="chips">Try</div>
+    <div id="out" class="card" role="status" aria-live="polite"><span class="stamp"></span><div><p></p><small></small></div></div>
   </div>
+  <svg class="owl" id="owl" viewBox="0 0 220 230" role="img" aria-label="Authena the owl">
+    <path d="M42 66 30 22l40 22M178 66l12-44-40 22" fill="#8f7bff" stroke="#16130f" stroke-width="5" stroke-linejoin="round"/>
+    <ellipse cx="110" cy="128" rx="84" ry="92" fill="#8f7bff" stroke="#16130f" stroke-width="5"/>
+    <ellipse cx="110" cy="164" rx="50" ry="50" fill="#d9d2ff" stroke="#16130f" stroke-width="5"/>
+    <path d="M90 150q10 9 20 0m0 0q10 9 20 0M96 172q7 7 14 0m0 0q7 7 14 0" fill="none" stroke="#16130f" stroke-width="4" stroke-linecap="round"/>
+    <g><circle cx="76" cy="96" r="33" fill="#fff" stroke="#16130f" stroke-width="5"/><circle class="pupil" cx="76" cy="96" r="14" fill="#16130f"/><circle class="pupil" cx="81" cy="91" r="4.5" fill="#fff"/><rect class="lid" x="43" y="63" width="66" height="66" rx="33" fill="#8f7bff"/></g>
+    <g><circle cx="144" cy="96" r="33" fill="#fff" stroke="#16130f" stroke-width="5"/><circle class="pupil" cx="144" cy="96" r="14" fill="#16130f"/><circle class="pupil" cx="149" cy="91" r="4.5" fill="#fff"/><rect class="lid" x="111" y="63" width="66" height="66" rx="33" fill="#8f7bff"/></g>
+    <path d="M110 108l-11 14h22z" fill="#ffd84d" stroke="#16130f" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M70 216h22m36 0h22" stroke="#16130f" stroke-width="7" stroke-linecap="round"/>
+  </svg>
 </div></header>
 
-<section id="how"><div class="wrap">
-  <div class="eyebrow">How it works</div>
-  <h2 class="t">A stake, a challenge, a ruling.</h2>
-  <p class="s">Kleros Curate holds the list and the money. GenLayer validators make the one decision code cannot make.</p>
-  <div class="steps">
-    <div class="step"><b>01 · LIST</b><h3>Publisher stakes</h3><p>A skill is listed at one exact commit, so its content can never change, with a deposit.</p></div>
-    <div class="step"><b>02 · CHALLENGE</b><h3>Hunter quotes a line</h3><p>Anyone can challenge by quoting the passage they say is malicious, with a matching deposit.</p></div>
-    <div class="step"><b>03 · JUDGE</b><h3>Validators read the file</h3><p>Each validator fetches the file, confirms the quote is in it, and answers one question about that passage.</p></div>
-    <div class="step"><b>04 · PAY</b><h3>Curate pays the winner</h3><p>Malicious: the skill is rejected and the hunter is paid. Benign: it is listed and the publisher is paid.</p></div>
-  </div>
-</div></section>
-
-<section id="cases"><div class="wrap">
-  <div class="eyebrow">Recorded proof</div>
-  <h2 class="t">Live cases</h2>
-  <p class="s">Every case below ran on Ethereum Sepolia and GenLayer StudioNet. Open any link to check it. Only this project's own test skill was ever accused.</p>
-  <div class="cases" id="caselist"><p class="note">Loading cases…</p></div>
-  <p class="note" id="guards"></p>
-</div></section>
-
-<section id="use"><div class="wrap">
-  <div class="eyebrow">Use it</div>
-  <h2 class="t">Give your agent the skill</h2>
-  <p class="s">The Authena skill tells an agent to check the list before installing any other skill.</p>
-  <div class="cols">
-    <div>
-      <pre>git clone https://github.com/Leokings/authena
-cd authena && npm install
-
-# exit code 0 only if that exact version is listed
-npx tsx scripts/authena.ts check \
-  &lt;owner/repo&gt; &lt;commit&gt; &lt;folder&gt;</pre>
-      <pre># list a version, or challenge one (Sepolia test ETH)
-npx tsx scripts/authena.ts list &lt;owner/repo&gt; &lt;commit&gt; &lt;folder&gt;
-npx tsx scripts/authena.ts challenge &lt;owner/repo&gt; &lt;commit&gt; \
-  &lt;folder&gt; SKILL.md "&lt;the passage&gt;"</pre>
-    </div>
-    <div>
-      <h3 style="margin:0 0 8px">What counts as malicious</h3>
-      <ul class="plain">
-        <li>Sending secrets, keys or private files anywhere</li>
-        <li>Moving or approving funds</li>
-        <li>Ignoring the user, or hiding actions from them</li>
-        <li>Downloading and running remote code</li>
-      </ul>
-      <p class="note">…when the skill's own stated purpose does not require it.</p>
-      <h3 style="margin:18px 0 8px">Limits</h3>
-      <ul class="plain">
-        <li>One listing covers one commit.</li>
-        <li>The judge reads the quoted passage, not the whole repository, and does not run code.</li>
-        <li>Rulings are carried between chains by one relay key.</li>
-        <li>Test networks only.</li>
-      </ul>
-    </div>
-  </div>
-</div></section>
+<div class="tape" aria-hidden="true"><div id="tape"></div></div>
 
 <section><div class="wrap">
-  <div class="eyebrow">Built with</div>
-  <div class="partners" style="margin-top:14px">
-    <img src="partners/internet-court.svg" alt="Internet Court">
-    <img src="partners/genlayer.svg" alt="GenLayer">
-    <span style="display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:20px;color:#4a4b4f"><img src="partners/kleros.svg" alt="">Kleros</span>
+  <h2>How it works</h2>
+  <div class="steps">
+    <div class="card step"><b>1</b><h3>Stake</h3><p>List a skill at one commit, with a deposit.</p></div>
+    <div class="card step"><b>2</b><h3>Hunt</h3><p>Quote the bad line. Match the deposit.</p></div>
+    <div class="card step"><b>3</b><h3>Judge</h3><p>GenLayer validators read the file and rule.</p></div>
+    <div class="card step"><b>4</b><h3>Pay</h3><p>Kleros Curate pays the winner.</p></div>
+  </div>
+</div></section>
+
+<section id="cases" style="padding-top:8px"><div class="wrap">
+  <h2>Case files</h2>
+  <div class="grid" id="grid"></div>
+  <p class="more" id="more"></p>
+</div></section>
+
+<section id="hunt" class="hunt"><div class="wrap">
+  <div>
+    <h2>Find a bad line.<br>Win the stake.</h2>
+    <div class="row">
+      <a class="btn y" href="https://github.com/Leokings/authena#use-it">Get the skill</a>
+      <a class="btn w" href="https://github.com/Leokings/authena/blob/main/docs/POLICY.md">What counts as bad</a>
+    </div>
+  </div>
+  <pre><i># safe to install?</i>
+npx tsx scripts/authena.ts check \
+  owner/repo &lt;commit&gt; skill-folder
+
+<i># spotted something?</i>
+npx tsx scripts/authena.ts challenge \
+  owner/repo &lt;commit&gt; skill-folder \
+  SKILL.md "the bad line"</pre>
+</div></section>
+
+<section id="kleros"><div class="wrap">
+  <div class="kleros">
+    <div>
+      <h2>Runs on Kleros Curate</h2>
+      <p class="sub" style="max-width:44ch">Kleros holds the list and the deposits. GenLayer is the judge it calls.</p>
+      <div class="row"><a class="btn" id="curate" target="_blank" rel="noopener">Open the list on Kleros ↗</a></div>
+      <div class="logos" style="margin-top:26px">
+        <img src="partners/internet-court.svg" alt="Internet Court">
+        <img src="partners/genlayer.svg" alt="GenLayer">
+        <span><img src="partners/kleros.svg" alt="">Kleros</span>
+      </div>
+    </div>
+    <img class="shot" id="shot" src="kleros-curate.png" alt="The Authena list on Kleros Curate" onerror="this.remove()">
   </div>
 </div></section>
 
 <footer><div class="wrap">
-  <span>Authena · built for the Internet Court Partner Demo Lab</span>
-  <span id="addresses"></span>
+  <span>Test networks only. Built for the Internet Court Partner Demo Lab.</span>
+  <span id="addr"></span>
 </div></footer>
 
 <script type="module">
@@ -185,88 +200,80 @@ import { sepolia } from "https://esm.sh/viem@2.21.0/chains";
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
-const short = (h) => (h ? h.slice(0, 10) + "…" + h.slice(-6) : "");
+const short = (h) => (h ? h.slice(0, 8) + "…" + h.slice(-4) : "");
 const data = await fetch("data.json").then((r) => r.json());
 const registry = data.sepolia.registry;
 const pub = createPublicClient({ chain: sepolia, transport: http("https://ethereum-sepolia-rpc.publicnode.com") });
 const abi = parseAbi(["function getItemInfo(bytes32) view returns (uint8 status, uint256 numberOfRequests, uint256 sumDeposit)"]);
-const STATUS = ["absent", "registered", "registration requested", "removal requested"];
 
-function show(kind, title, detail) {
-  const r = $("result");
-  r.className = kind;
-  r.style.display = "block";
-  r.querySelector("strong").textContent = title;
-  r.querySelector("span").textContent = detail;
+// ---- the checker --------------------------------------------------------------------
+function parse(text) {
+  const t = text.trim().replace(/^https?:\/\//, "").replace(/^(www\.)?github\.com\//, "");
+  const m = t.match(/^([\w.-]+\/[\w.-]+)\/(?:tree|blob)\/([^/]+)\/?(.*)$/) || t.match(/^([\w.-]+\/[\w.-]+)@([^/:\s]+)[/:]?(.*)$/) || t.match(/^([\w.-]+\/[\w.-]+)\s+(\S+)\s*(\S*)$/);
+  if (!m) return null;
+  return { repo: m[1], commit: m[2].toLowerCase(), path: m[3].replace(/\/?SKILL\.md$/i, "").replace(/[?#].*$/, "").replace(/^\/+|\/+$/g, "") };
 }
-
-async function check(repo, commit, folder) {
-  repo = repo.trim(); commit = commit.trim().toLowerCase(); folder = folder.trim().replace(/^\/+|\/+$/g, "");
-  if (!/^[0-9a-f]{40}$/.test(commit)) return show("no", "That is not a full commit hash", "Authena only lists exact commits, because a branch can change after it is checked.");
-  show("wait", "Checking the list on Sepolia…", "");
-  const listing = JSON.stringify({ repo, commit, path: folder });
-  const itemId = keccak256(toHex(listing));
+function show(kind, stamp, line, small = "") {
+  const o = $("out"), s = o.querySelector(".stamp");
+  o.classList.add("show");
+  s.className = "stamp " + kind; s.textContent = stamp;
+  void s.offsetWidth; s.classList.add("go");
+  o.querySelector("p").textContent = line; o.querySelector("small").textContent = small;
+}
+async function check(text) {
+  const p = parse(text);
+  if (!p) return show("hm", "Hm?", "Paste a GitHub link to the skill's folder.");
+  if (!/^[0-9a-f]{40}$/.test(p.commit)) return show("hm", "Pin it", "Use a link at a full commit, not a branch. Branches can change.");
+  show("hm", "…", "Asking Sepolia");
+  const id = keccak256(toHex(JSON.stringify({ repo: p.repo, commit: p.commit, path: p.path })));
+  const where = `${p.repo} · ${p.commit.slice(0, 10)} · ${p.path || "(root)"}`;
   try {
-    const [status, requests] = await pub.readContract({ address: registry, abi, functionName: "getItemInfo", args: [itemId] });
-    const s = STATUS[Number(status)];
-    if (s === "registered") show("ok", "Listed: safe to install this exact version", `Item ${short(itemId)} is registered on the Authena list.`);
-    else if (s === "registration requested") show("wait", "Listing requested, still open to challenge", "Wait for the challenge window to close before relying on it.");
-    else if (s === "removal requested") show("wait", "Listed, but someone has asked to remove it", "Wait for the ruling before installing.");
-    else show("no", "Not on the list", Number(requests) > 0 ? "This version was submitted and rejected. Do not install it." : "Nobody has staked on this version. Not listed does not mean safe.");
-  } catch (e) {
-    show("no", "Could not reach Sepolia", "Try again in a moment.");
-  }
+    const [status, requests] = await pub.readContract({ address: registry, abi, functionName: "getItemInfo", args: [id] });
+    const s = Number(status);
+    if (s === 1) show("ok", "Clean", "On the list. Install this exact version.", where);
+    else if (s === 2) show("hm", "Pending", "Listed, still open to challenge.", where);
+    else if (s === 3) show("hm", "Disputed", "Someone wants it removed. Wait for the ruling.", where);
+    else if (Number(requests) > 0) show("bad", "Busted", "Submitted and rejected. Don't install it.", where);
+    else show("hm", "Unknown", "Nobody has vouched for this version.", where);
+  } catch { show("hm", "Oops", "Couldn't reach Sepolia. Try again."); }
 }
+$("form").addEventListener("submit", (e) => { e.preventDefault(); check($("q").value); });
 
-$("form").addEventListener("submit", (e) => { e.preventDefault(); check($("repo").value, $("commit").value, $("folder").value); });
-
-const tone = (c) => {
-  const s = c.readback.curate_status, f = c.readback.verdict?.finding;
-  if (f === "MALICIOUS" || f === "LISTING_NOT_PINNED") return ["bad", f === "MALICIOUS" ? "MALICIOUS" : "NOT PINNED"];
-  if (f === "BENIGN") return ["ok", "BENIGN"];
-  if (f === "QUOTE_NOT_IN_FILE") return ["ok", "QUOTE NOT IN FILE"];
-  if (c.sepolia.refuse_tx) return ["warn", "NO RULING IN TIME"];
-  return [s === "registered" ? "ok" : "warn", "UNCHALLENGED"];
-};
-
-$("caselist").innerHTML = data.cases.map((c) => {
-  const [kind, label] = tone(c);
-  const v = c.readback.verdict?.judged ? c.readback.verdict : null;
-  const l = c.listing ? JSON.parse(c.listing) : {};
-  const link = (href, text) => (href ? `<a href="${esc(href)}" target="_blank" rel="noopener">${esc(text)}</a>` : "");
-  const listed = c.readback.curate_status === "registered";
-  return `<article class="case">
-    <header><h3>${esc(c.shows)}</h3><span class="badge ${kind}">${esc(label)}</span><span class="badge ${listed ? "ok" : "bad"}">${listed ? "LISTED" : "NOT LISTED"}</span></header>
-    <dl class="kv">
-      <dt>Skill</dt><dd>${esc(l.repo)} / ${esc(l.path || "(root)")}</dd>
-      <dt>Version</dt><dd>${esc(l.commit)}</dd>
-      ${v ? `<dt>Decided by</dt><dd>${esc(v.judged_by === "code" ? "code alone (no judgment needed)" : "GenLayer validators")}</dd>` : ""}
-    </dl>
-    ${v?.quote ? `<blockquote class="${kind === "bad" ? "" : "neutral"}">${esc(v.quote)}</blockquote>` : ""}
-    <div class="links">
-      ${link(c.sepolia.list_tx, "Listing (Sepolia)")}
-      ${link(c.sepolia.challenge_tx, "Challenge (Sepolia)")}
-      ${link(c.genlayer?.judge_tx, "Judgment (GenLayer)")}
-      ${link(c.sepolia.ruling_tx, "Ruling paid (Sepolia)")}
-      ${link(c.sepolia.execute_tx, "Registered (Sepolia)")}
-      ${link(c.sepolia.refuse_tx, "Closed after deadline (Sepolia)")}
-    </div>
-  </article>`;
-}).join("");
+// ---- case files ---------------------------------------------------------------------
+const cards = data.cards ?? [];
+$("grid").innerHTML = cards.map((c) => `<article class="card case">
+  <span class="stamp ${c.tone}">${esc(c.stamp)}</span>
+  <h3>${esc(c.title)}</h3>
+  <p class="who">${esc(c.who)}</p>
+  ${c.quote ? `<p class="quote ${c.tone === "bad" ? "" : "g"}">${esc(c.quote)}</p>` : ""}
+  <div class="pills">${c.links.filter((x) => x[1]).map(([t, h]) => `<a class="pill" href="${esc(h)}" target="_blank" rel="noopener">${esc(t)} ↗</a>`).join("")}</div>
+</article>`).join("");
 
 const guards = data.genlayer_steps.filter((s) => s.expected_failure);
-$("guards").innerHTML = guards.length ? "Guards that failed as designed on GenLayer: " + guards.map((g) => `<a href="${esc(g.explorer)}" target="_blank" rel="noopener">${esc(g.expected_error.replace("[EXPECTED] ", ""))}</a>`).join(" · ") : "";
+$("more").innerHTML = (guards.length ? "Blocked on purpose: " + guards.map((g) => `<a href="${esc(g.explorer)}" target="_blank" rel="noopener">${esc(g.expected_error.replace("[EXPECTED] ", "").replaceAll("_", " "))}</a>`).join(" · ") + ". " : "") + `<a href="https://github.com/Leokings/authena/blob/main/deployments/release-manifest.json" target="_blank" rel="noopener">Full record ↗</a>`;
 
-for (const c of data.cases.filter((c) => c.listing && /^[0-9a-f]{40}$/.test(JSON.parse(c.listing).commit)).slice(0, 3)) {
-  const l = JSON.parse(c.listing);
+$("tape").innerHTML = cards.map((c) => `<b>${esc(c.short)}</b> ${c.tone === "bad" ? `<u>${esc(c.stamp.toUpperCase())}</u>` : `<i>${esc(c.stamp.toUpperCase())}</i>`}`).join(" &nbsp;✦&nbsp; ");
+
+for (const c of cards.filter((c) => c.link).slice(0, 3)) {
   const b = document.createElement("button");
-  b.type = "button"; b.className = "chip";
-  b.textContent = l.path.split("/").filter(Boolean).pop();
-  b.addEventListener("click", () => { $("repo").value = l.repo; $("commit").value = l.commit; $("folder").value = l.path.replace(/^\/+|\/+$/g, ""); check(l.repo, l.commit, l.path); });
-  $("examples").appendChild(b);
+  b.type = "button"; b.className = "chip"; b.textContent = c.short;
+  b.addEventListener("click", () => { $("q").value = c.link; check(c.link); });
+  $("chips").appendChild(b);
 }
 
-$("addresses").innerHTML = `List <a href="https://sepolia.etherscan.io/address/${esc(registry)}" target="_blank" rel="noopener">${esc(short(registry))}</a> · Judge <a href="${esc(data.genlayer.contract.explorer)}" target="_blank" rel="noopener">${esc(short(data.genlayer.contract.address))}</a>`;
+$("curate").href = `https://curate.kleros.io/tcr/11155111/${registry}`;
+$("addr").innerHTML = `list <a href="https://sepolia.etherscan.io/address/${esc(registry)}" target="_blank" rel="noopener">${esc(short(registry))}</a> · judge <a href="${esc(data.genlayer.contract.explorer)}" target="_blank" rel="noopener">${esc(short(data.genlayer.contract.address))}</a>`;
+
+// ---- the owl watches the cursor -----------------------------------------------------
+const owl = $("owl"), pupils = owl.querySelectorAll(".pupil");
+if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  addEventListener("pointermove", (e) => {
+    const r = owl.getBoundingClientRect(), dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height * 0.42);
+    const d = Math.hypot(dx, dy) || 1, k = Math.min(12, d / 14);
+    pupils.forEach((p) => (p.style.transform = `translate(${(dx / d) * k}px, ${(dy / d) * k}px)`));
+  });
+  setInterval(() => { owl.classList.add("blink"); setTimeout(() => owl.classList.remove("blink"), 130); }, 4200);
+}
 </script>
 </body>
 </html>
