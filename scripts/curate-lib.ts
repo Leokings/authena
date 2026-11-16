@@ -17,7 +17,8 @@ type W = WalletClient & { account: { address: Hex } };
 async function send(w: W, functionName: string, args: unknown[], value?: bigint) {
   const { registry } = deployment();
   const hash = await (w as any).writeContract({ address: registry, abi: registryAbi, functionName, args, value });
-  const receipt = await pub.waitForTransactionReceipt({ hash });
+  // Sepolia can take a few minutes to include a transaction; do not give up early.
+  const receipt = await pub.waitForTransactionReceipt({ hash, timeout: 300_000 });
   if (receipt.status !== "success") throw new Error(`${functionName} reverted: ${hash}`);
   return receipt;
 }
@@ -132,7 +133,7 @@ export async function relay(disputeTx: Hex, label: string) {
   const w = wallet(signerKey());
   const genlayerTx = (judge?.tx ?? "0x" + "0".repeat(64)) as Hex;
   const hash = await w.writeContract({ address: arbitrator, abi: arb.abi, functionName: "giveRuling", args: [BigInt(inputs.disputeId), BigInt(v.ruling), genlayerTx] });
-  const receipt = await pub.waitForTransactionReceipt({ hash });
+  const receipt = await pub.waitForTransactionReceipt({ hash, timeout: 300_000 });
   return { ...inputs, judge, verdict: v, relayed: receipt.status === "success", rulingTx: hash, itemStatus: await status(inputs.itemId) };
 }
 

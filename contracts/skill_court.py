@@ -54,7 +54,8 @@ RULING_NONE, RULING_REQUESTER, RULING_CHALLENGER = 0, 1, 2
 RE_REPO = re.compile(r"^[A-Za-z0-9_.-]{1,100}/[A-Za-z0-9_.-]{1,100}$")
 RE_COMMIT = re.compile(r"^[0-9a-f]{40}$")
 RE_PATH = re.compile(r"^[A-Za-z0-9_.\-/]{0,200}$")
-RE_IPFS = re.compile(r"^/ipfs/[A-Za-z0-9]{40,80}(/[A-Za-z0-9_.\-]{1,80}){0,3}$")
+RE_IPFS = re.compile(r"^/ipfs/Qm[1-9A-HJ-NP-Za-km-z]{44}$")  # a version-0 content address, no sub-path
+BASE58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 
 
 def _fail(code: str) -> NoReturn:
@@ -240,12 +241,39 @@ def _read_chain(registry: str, arbitrator: str, dispute_id: int, list_tx: str, d
 # --- Reading the skill ------------------------------------------------------------------
 
 
+def _varint(n: int) -> bytes:
+    out = bytearray()
+    while n >= 0x80:
+        out.append((n & 0x7F) | 0x80)
+        n >>= 7
+    out.append(n)
+    return bytes(out)
+
+
+def _ipfs_address(data: bytes) -> str:
+    """The IPFS address (CID version 0) of a small file: the hash of its one-block UnixFS node.
+
+    This is what `ipfs add` and Kleros's uploader produce for a file under 256 KB, so the bytes a
+    gateway serves can be checked against the address written on-chain.
+    """
+    # A UnixFS file node: type = file (2), the data, then its size; wrapped as a dag-pb node.
+    unixfs = bytes((8, 2, 18)) + _varint(len(data)) + data + bytes((24,)) + _varint(len(data))
+    digest = bytes((18, 32)) + hashlib.sha256(bytes((10,)) + _varint(len(unixfs)) + unixfs).digest()
+    n, text = int.from_bytes(digest, "big"), ""
+    while n > 0:
+        n, r = divmod(n, 58)
+        text = BASE58[r] + text
+    return "/ipfs/" + text
+
+
 def _fetch_ipfs_json(uri: str) -> Any:
-    """A JSON file from Kleros's IPFS gateway, or None when it is not usable JSON.
+    """A JSON file from IPFS, or None when it is not usable JSON.
 
     Curate's own website reads listings and evidence from IPFS, so a list that should show there
-    stores `/ipfs/<cid>/…` on-chain instead of the text itself. A gateway that cannot serve the
-    file says nothing about the listing, so that is an error, never a finding.
+    stores `/ipfs/<address>` on-chain instead of the text itself. The file is fetched through
+    Kleros's gateway and its bytes are checked against that address, so the gateway cannot serve
+    something else. A gateway that cannot serve the file says nothing about the listing, so that is
+    an error, never a finding.
     """
     res = gl.nondet.web.get(IPFS_GATEWAY + uri)
     if res.status >= 500 or res.status == 429:
@@ -255,6 +283,8 @@ def _fetch_ipfs_json(uri: str) -> Any:
     body = res.body or b""
     if len(body) > MAX_IPFS_BYTES:
         return None
+    if _ipfs_address(body) != uri:
+        _external("ipfs_content_mismatch")
     try:
         return json.loads(body.decode("utf-8"))
     except Exception:

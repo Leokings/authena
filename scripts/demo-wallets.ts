@@ -10,7 +10,7 @@ import { parseEther } from "viem";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 import { pub, signerKey, wallet, WALLETS } from "./lib";
 
-const TARGET = parseEther("0.02");
+const TARGET = parseEther("0.03");
 const roles = ["publisher", "hunter"] as const;
 
 mkdirSync("data", { recursive: true });

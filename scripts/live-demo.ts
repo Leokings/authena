@@ -103,7 +103,7 @@ for (const c of of("timeout")) {
   await step(`${c.id}/refuse`, async () => {
     await waitUntil(S[`${c.id}/challenge`].tx, Number(dep.rulingTimeoutSeconds), "the ruling deadline");
     const hash = await hunter.writeContract({ address: dep.arbitrator, abi: artifact("GenLayerArbitrator").abi, functionName: "refuse", args: [BigInt(S[`${c.id}/challenge`].disputeId)] });
-    await pub.waitForTransactionReceipt({ hash });
+    await pub.waitForTransactionReceipt({ hash, timeout: 300_000 });
     return { tx: hash };
   });
 }

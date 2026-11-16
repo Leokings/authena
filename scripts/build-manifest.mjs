@@ -206,7 +206,7 @@ const manifest = {
   ],
   not_proven: [
     "The relay is one key held by this project. Each ruling on Sepolia stores the GenLayer transaction it came from, so it can be checked, but the relay must be trusted to pass rulings on.",
-    "Listings and accusations stored on IPFS are read through Kleros's gateway (cdn.kleros.link). Validators all use that gateway and do not re-derive the content address, so the gateway is trusted to serve the right file.",
+    "Files on IPFS are fetched through Kleros's gateway and checked against their address, so the gateway cannot swap them. Only version-0 addresses of single-block files (under 256 KB) are accepted.",
     "Test networks only (GenLayer StudioNet, Ethereum Sepolia). Deposits are test ETH.",
     "The publisher and the hunter are both this project's wallets. Only this repository's own fixture skills were accused.",
     "The judge reads one quoted passage and about 1,500 characters either side. It does not run code and does not see the rest of a large file.",

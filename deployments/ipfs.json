@@ -1,0 +1,151 @@
+{
+  "fixturesCommit": "61f610cdd5f16f830715a83497f3b4c115792c88",
+  "bySha": {
+    "62aa1a0197aaa79bed1dbe4d6b3c97c156031191f7cdfba92005e03eaff80f81": {
+      "name": "policy.pdf",
+      "cid": "/ipfs/QmeNiNwnmtcUYGxnTW82nGSTvMAbC37kuzXu7W7Soy7hbZ",
+      "url": "https://cdn.kleros.link/ipfs/QmeNiNwnmtcUYGxnTW82nGSTvMAbC37kuzXu7W7Soy7hbZ"
+    },
+    "332d787618630ff5973305dc36ba87edf6b48434caae0b24ccbbc686022699eb": {
+      "name": "logo.png",
+      "cid": "/ipfs/QmbhvviTPgLzfcAxHXoFftzSaTNkbpwaUH6cSAuvEwVLRb",
+      "url": "https://cdn.kleros.link/ipfs/QmbhvviTPgLzfcAxHXoFftzSaTNkbpwaUH6cSAuvEwVLRb"
+    },
+    "f468b73d7a9996b430d1c9bf9141016663a7eb79ba35394ae35325e65c8ad20d": {
+      "name": "reg-meta-evidence.json",
+      "cid": "/ipfs/QmRRH5ht7rNeqzN6ZsoKZzezkXz7qbvcgquxRBsWk4eNmB",
+      "url": "https://cdn.kleros.link/ipfs/QmRRH5ht7rNeqzN6ZsoKZzezkXz7qbvcgquxRBsWk4eNmB"
+    },
+    "b73114a7def9ce162e47874190d8ddb1b5524d72cc9992c312be3f6e47ee8374": {
+      "name": "clr-meta-evidence.json",
+      "cid": "/ipfs/QmWJcnjApoWrVgU9cwCZNjYQsP6bVo59sebUrfV39Mq8uA",
+      "url": "https://cdn.kleros.link/ipfs/QmWJcnjApoWrVgU9cwCZNjYQsP6bVo59sebUrfV39Mq8uA"
+    },
+    "a61ac599323e6e04877c3628a786e1ef6ab122226d0b2a9a0bd9a75c9eef98eb": {
+      "name": "item-kleros-curate.json",
+      "cid": "/ipfs/QmSC9mXiYb1wSv3e7nMKMbCtksx1PvpTcULG9DnKsSG2gL",
+      "url": "https://cdn.kleros.link/ipfs/QmSC9mXiYb1wSv3e7nMKMbCtksx1PvpTcULG9DnKsSG2gL"
+    },
+    "a639d74869cd99eaad70037557b78c4e51dabf3ab6d149b398ecff82d2f1dce9": {
+      "name": "item-poisoned-uploader.json",
+      "cid": "/ipfs/QmXBDJBLjRz2AV7uFz76buXbhA5vyPHxN9j85wvpF7bHiE",
+      "url": "https://cdn.kleros.link/ipfs/QmXBDJBLjRz2AV7uFz76buXbhA5vyPHxN9j85wvpF7bHiE"
+    },
+    "8cad0760a620971f29daf882fa53dba4793c53839edf037c72a181b265fda042": {
+      "name": "evidence-8cad0760a6.json",
+      "cid": "/ipfs/QmeznfDTQjGJ6SonnmUpxYb5p9hATL9PEBaftWStue3kmL",
+      "url": "https://cdn.kleros.link/ipfs/QmeznfDTQjGJ6SonnmUpxYb5p9hATL9PEBaftWStue3kmL"
+    },
+    "b8cdfada24def7617c05726ff3979f9c7b638a293fff4d9d2ceb564c5e7c0555": {
+      "name": "item-file-uploader.json",
+      "cid": "/ipfs/Qmcx1ymgRjwx6EaFQXXz2ToANh2qZmtLUp2bCaq1vBhTay",
+      "url": "https://cdn.kleros.link/ipfs/Qmcx1ymgRjwx6EaFQXXz2ToANh2qZmtLUp2bCaq1vBhTay"
+    },
+    "08011772dc244ddc13fd7aa5c4f7e63fa4c6a8aeb42cdd10c4d6eb0f48fdefa2": {
+      "name": "evidence-08011772dc.json",
+      "cid": "/ipfs/QmefzvDD234CNVmdN5xWAqKJETF1HkR4Ax58Fy2NW1Jkcv",
+      "url": "https://cdn.kleros.link/ipfs/QmefzvDD234CNVmdN5xWAqKJETF1HkR4Ax58Fy2NW1Jkcv"
+    },
+    "ddea11d3702141fe51d3ce819957018d9ec605cf0f456dd6f8b2d99bc953d5d1": {
+      "name": "item-honest-cli-installer.json",
+      "cid": "/ipfs/QmQgjRna2jKCCaTUbSMBLMFS97Co3YPrdAGgt5jrGdioGa",
+      "url": "https://cdn.kleros.link/ipfs/QmQgjRna2jKCCaTUbSMBLMFS97Co3YPrdAGgt5jrGdioGa"
+    },
+    "e34ce17ef284b2ce270bc7cc7c933010aaa996a7c1c28e7ccd8f197d9b359421": {
+      "name": "evidence-e34ce17ef2.json",
+      "cid": "/ipfs/QmSANuASVyoCbTe7nWEQbxuVAi2jYk3LbwzKxen2bzTBHi",
+      "url": "https://cdn.kleros.link/ipfs/QmSANuASVyoCbTe7nWEQbxuVAi2jYk3LbwzKxen2bzTBHi"
+    },
+    "eba78a9e1ea662bd66a38165c874ae17bd25e11ae5e632b16c24dd8a7dcfcd09": {
+      "name": "item-honest-payments.json",
+      "cid": "/ipfs/QmWe4BfSMiqNGt4HYuHs2konPcDESacxq5g3MT6N5T5NiG",
+      "url": "https://cdn.kleros.link/ipfs/QmWe4BfSMiqNGt4HYuHs2konPcDESacxq5g3MT6N5T5NiG"
+    },
+    "54ae239bea28bcf7bc34847a2aaa4360b9cbed7e587306378fd0da709b4d7fa1": {
+      "name": "evidence-54ae239bea.json",
+      "cid": "/ipfs/QmWWFcj2csbVjgnKD1eZNQFc94FYTCa8dEqspM1wyBJKBn",
+      "url": "https://cdn.kleros.link/ipfs/QmWWFcj2csbVjgnKD1eZNQFc94FYTCa8dEqspM1wyBJKBn"
+    },
+    "ef0516d8bc49887ca8d1f9729db710aa17a67e45a3265348675839d129122fdc": {
+      "name": "item-honest-security-notes.json",
+      "cid": "/ipfs/QmRXUxRApj2cDBHf8vKHi8gAmPX2LeiAPHsTUYz7T5QC55",
+      "url": "https://cdn.kleros.link/ipfs/QmRXUxRApj2cDBHf8vKHi8gAmPX2LeiAPHsTUYz7T5QC55"
+    },
+    "4827ce7e6d5f9393dd4c0769df207627e88117ff8b4b097bfab3d5897d9a6750": {
+      "name": "evidence-4827ce7e6d.json",
+      "cid": "/ipfs/Qmcqea6nJ8H91W2sZoqWbtTEP1jaXZMQKkP9fiECFQQuCL",
+      "url": "https://cdn.kleros.link/ipfs/Qmcqea6nJ8H91W2sZoqWbtTEP1jaXZMQKkP9fiECFQQuCL"
+    },
+    "77a7f86faba703b6d81adec4923ca81fe9d59155b61de8c9e7760dbe839e00a5": {
+      "name": "item-sneaky-transcript-leak.json",
+      "cid": "/ipfs/QmaBvuGt6HS1EAQRS4fWZsthjxWMFxTWZh2odRBYVgFLsb",
+      "url": "https://cdn.kleros.link/ipfs/QmaBvuGt6HS1EAQRS4fWZsthjxWMFxTWZh2odRBYVgFLsb"
+    },
+    "38d29f73d13be4aa6e11eb870f0578ae55e58cf8823ecb77f645e6d6e5adf028": {
+      "name": "evidence-38d29f73d1.json",
+      "cid": "/ipfs/QmPrkmGqHKKcqKXAgVjR22d2qc3X1rL8uBU1fqcAkvUzzV",
+      "url": "https://cdn.kleros.link/ipfs/QmPrkmGqHKKcqKXAgVjR22d2qc3X1rL8uBU1fqcAkvUzzV"
+    },
+    "27819ddd77ce78c80bb495bf05407e4cfa75cada72ffa1da882935f31c483776": {
+      "name": "item-sneaky-token-approval.json",
+      "cid": "/ipfs/QmQGveePrkeXFMdWkvZPk6HJUN5XJRzgDUqFBWfTxzjBpo",
+      "url": "https://cdn.kleros.link/ipfs/QmQGveePrkeXFMdWkvZPk6HJUN5XJRzgDUqFBWfTxzjBpo"
+    },
+    "f3da1a09c16a7625a2827d9c8aca04980313001e1cc6c4fa5d78566ac4dfdf08": {
+      "name": "evidence-f3da1a09c1.json",
+      "cid": "/ipfs/QmUfroBZL7kDXD8etBomoW2Rnmnm5HoFxV8yQxKut9HBwa",
+      "url": "https://cdn.kleros.link/ipfs/QmUfroBZL7kDXD8etBomoW2Rnmnm5HoFxV8yQxKut9HBwa"
+    },
+    "6665800fdca2fbc70b5f528a3987bc1d735dea45cb6a2af52900657de7330d9c": {
+      "name": "item-sneaky-remote-loader.json",
+      "cid": "/ipfs/QmaeDYDtF1BNYgXs1Mo2wm5CvSsQK9mHwfJmD5tRtp17PV",
+      "url": "https://cdn.kleros.link/ipfs/QmaeDYDtF1BNYgXs1Mo2wm5CvSsQK9mHwfJmD5tRtp17PV"
+    },
+    "6047ba5ff3f5f35e780857de44114c9ce79da03a06bc3e841ecd99c60e0db079": {
+      "name": "evidence-6047ba5ff3.json",
+      "cid": "/ipfs/Qmc4dkuVxN1yzP9YAsLMtujJ8HYowXA74VRry1E4BqGumA",
+      "url": "https://cdn.kleros.link/ipfs/Qmc4dkuVxN1yzP9YAsLMtujJ8HYowXA74VRry1E4BqGumA"
+    },
+    "9a8daa496b70a3675e4d98bc4dc00f18d2c217198fe2829742349b451a38e263": {
+      "name": "item-markdown-tidy.json",
+      "cid": "/ipfs/QmTBw1hoVb5mHxJNm6ZGmK7AVn6qQAofoc3AbvvsnVrLSC",
+      "url": "https://cdn.kleros.link/ipfs/QmTBw1hoVb5mHxJNm6ZGmK7AVn6qQAofoc3AbvvsnVrLSC"
+    },
+    "87833629cc6fff505051f9250483f09f334c952b8e3e0eb768a33b72eea72724": {
+      "name": "evidence-87833629cc.json",
+      "cid": "/ipfs/QmchTAsWsfVpTbQuSWLrx7ksd2gEqizEvHjNWSNmFqu133",
+      "url": "https://cdn.kleros.link/ipfs/QmchTAsWsfVpTbQuSWLrx7ksd2gEqizEvHjNWSNmFqu133"
+    },
+    "d7e3bf0db913e39213d2c0ec5063daffab6ae38bf20e266a9e1dd97c56f64ca1": {
+      "name": "item-not-pinned.json",
+      "cid": "/ipfs/QmRCjbTBemhkAVxoSkZUKXsTDJdZ629VV7fYYFGyxiQoNf",
+      "url": "https://cdn.kleros.link/ipfs/QmRCjbTBemhkAVxoSkZUKXsTDJdZ629VV7fYYFGyxiQoNf"
+    },
+    "ebdbd7e4ac503cd8cd2e87c559cb49c461797c45c8ccfc8f2e87b4eb24f130dd": {
+      "name": "item-weather-lookup.json",
+      "cid": "/ipfs/Qmd3ARUuAifo8dzQtVz1C2PrrfgrUNJwhV6WMRXwDWhZtC",
+      "url": "https://cdn.kleros.link/ipfs/Qmd3ARUuAifo8dzQtVz1C2PrrfgrUNJwhV6WMRXwDWhZtC"
+    },
+    "12b9696c98cc422619bbaababe27b2831ae81e47aa0d93a2855925f65e9995ab": {
+      "name": "evidence-12b9696c98.json",
+      "cid": "/ipfs/QmX1CwjEPKmvbGiyuwovGzopZABWTuCyB15nr3UJ782z6d",
+      "url": "https://cdn.kleros.link/ipfs/QmX1CwjEPKmvbGiyuwovGzopZABWTuCyB15nr3UJ782z6d"
+    },
+    "06b22271191e3b73f56e482364ebdf42488fa5e6fa45633991de2b1176c98fcb": {
+      "name": "item-pdf-summarizer.json",
+      "cid": "/ipfs/QmNLs8rLojm3NipJBQk5DmLwBNXj8nYwJK4h3jpWN6jL75",
+      "url": "https://cdn.kleros.link/ipfs/QmNLs8rLojm3NipJBQk5DmLwBNXj8nYwJK4h3jpWN6jL75"
+    },
+    "8269a01a299d80d414bdfba764870e1e40e30abcc45bdfc563aea1288504a52d": {
+      "name": "evidence-8269a01a29.json",
+      "cid": "/ipfs/QmQwLEDHEph57JKLr9mCrAyrYSzeJvUtiMVawYjfX5JVdu",
+      "url": "https://cdn.kleros.link/ipfs/QmQwLEDHEph57JKLr9mCrAyrYSzeJvUtiMVawYjfX5JVdu"
+    }
+  },
+  "list": {
+    "policy": "/ipfs/QmeNiNwnmtcUYGxnTW82nGSTvMAbC37kuzXu7W7Soy7hbZ",
+    "logo": "/ipfs/QmbhvviTPgLzfcAxHXoFftzSaTNkbpwaUH6cSAuvEwVLRb",
+    "registrationMetaEvidence": "/ipfs/QmRRH5ht7rNeqzN6ZsoKZzezkXz7qbvcgquxRBsWk4eNmB",
+    "clearingMetaEvidence": "/ipfs/QmWJcnjApoWrVgU9cwCZNjYQsP6bVo59sebUrfV39Mq8uA"
+  }
+}

@@ -153,9 +153,12 @@ class FakeWorld:
         self.files["/".join(p for p in (repo, commit, path, name) if p)] = raw
 
 
-    def pin(self, uri: str, doc: object) -> str:
-        """Stores a file on the fake IPFS gateway and returns its on-chain path."""
-        self.ipfs[uri] = doc if isinstance(doc, bytes) else json.dumps(doc).encode("utf-8")
+    def pin(self, doc: object, at: str | None = None) -> str:
+        """Stores a file on the fake IPFS gateway at its real address (or at `at`, to simulate a
+        gateway serving the wrong bytes) and returns the on-chain path."""
+        raw = doc if isinstance(doc, bytes) else json.dumps(doc).encode("utf-8")
+        uri = at or ipfs_address(raw)
+        self.ipfs[uri] = raw
         return uri
 
 
@@ -163,8 +166,34 @@ def world(vm) -> FakeWorld:
     return vm._live_web_handler.__self__
 
 
-ITEM_URI = "/ipfs/QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG/item.json"
-EVIDENCE_URI = "/ipfs/QmPZ9gcCEpqKTo6aq61g2nXGUhM4iCL3ewB6LDXZCtioEB/evidence.json"
+BASE58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+
+
+def _varint(n: int) -> bytes:
+    out = bytearray()
+    while n >= 0x80:
+        out.append((n & 0x7F) | 0x80)
+        n >>= 7
+    out.append(n)
+    return bytes(out)
+
+
+def ipfs_address(data: bytes) -> str:
+    """CID version 0 of a small file, computed independently of the contract."""
+    import hashlib
+
+    # A UnixFS file node: type = file (2), the data, then its size; wrapped as a dag-pb node.
+    unixfs = bytes((8, 2, 18)) + _varint(len(data)) + data + bytes((24,)) + _varint(len(data))
+    digest = bytes((18, 32)) + hashlib.sha256(bytes((10,)) + _varint(len(unixfs)) + unixfs).digest()
+    n, text = int.from_bytes(digest, "big"), ""
+    while n > 0:
+        n, r = divmod(n, 58)
+        text = BASE58[r] + text
+    return "/ipfs/" + text
+
+
+# A well-formed address with nothing stored behind it.
+EMPTY_URI = "/ipfs/QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG"
 COLUMNS = [
     {"label": "Repository", "description": "GitHub repository as owner/name.", "type": "text", "isIdentifier": True},
     {"label": "Commit", "description": "The full 40-character commit hash of the listed version.", "type": "text", "isIdentifier": True},
