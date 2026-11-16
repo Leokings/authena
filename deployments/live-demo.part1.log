@@ -1,0 +1,36 @@
+✓ A-real-clean-unchallenged/list {"tx":"0xa87e383cf8b9d49aa8fa084c1be36a41a7502a116e6564367805df588bfd32d5","itemId":"0x7b0205a6599826a685ffc45d1c7dedc9396c71ad6d27f2f6fafb66941335cdf4"}
+✓ B-poisoned/list {"tx":"0xb56ee04af4ddfa4b8e3cd4958c535f7a6cf934e60f1bf403d3c6b757eb59f8a8","itemId":"0xe8dc5c384f1f90327a3d43da62966ac3d93baf5e93d035f63c06f8a010d904de"}
+✓ C-clean-false-challenge/list {"tx":"0x145582a7e6df20c01c1b2bd2a40e802aa17807c162bc801218c3324495e8ea83","itemId":"0x2a6d7601c9ae69dace12cb77f68c94402d69286e062b639e5b01f7cd7a047398"}
+✓ D-fabricated-quote/list {"tx":"0xe257e0f1e8346f2f2fd8152af79b3bd6c38606ae1969edda8d0c640b34a8f868","itemId":"0xc8abc04c3d3bbbf10e6d72cdd7952e13ecb650ba1c6ee3dc0f041e2be837521e"}
+✓ E-not-pinned/list {"tx":"0x01ff428da07b30c3683e88d7f16592cad55a0c402a307b455ee292fae8582617","itemId":"0x87febd185bae1c50261d439a352d98fcd2bba5a9a55718e2c13d6390cb7da626"}
+✓ F-no-ruling-in-time/list {"tx":"0x7589224abd988dbca6e2db7961975020a99010cc46b1b4ec2fd28d1bdbeed44b","itemId":"0xbe69abed35ba091c3d0e68d74aa5ad7251b217b2aad2140e8f783a6a3b4450a8"}
+✓ B-poisoned/challenge {"tx":"0x31eb5e30bf1ecae70a3421bd9b76c603a46470f59ae8699a66a0506918056acd","disputeId":1}
+✓ C-clean-false-challenge/challenge {"tx":"0x696ed8dc7ab0bae85086372b8ee8a00283bf594dd4b7fdf4fff483f40cbb2e2c","disputeId":2}
+✓ D-fabricated-quote/challenge {"tx":"0x9c2e4f62a545d861a34108d0bda84ca45c68cad4045418c952c8ba5733e85fb4","disputeId":3}
+✓ E-not-pinned/challenge {"tx":"0x1ed64b532ba877c79d45c807e020f97ebfb31b59ef870343b6b678ce00717bd8","disputeId":4}
+✓ F-no-ruling-in-time/challenge {"tx":"0x827f6eea1c7a3410c28a0d546bbff79a56baea022e6953f0d4880b1f7f2fc180","disputeId":5}
+✓ guard/quote-tx-mismatch {"label":"EXPECTED-quote-tx-mismatch","tx":"0x893ef7795f82be2b024a9799e75d012b6d1a164e0a500c58b2746a469e0f5c5d","status":"FINALIZED","leader":"ERROR","agree":3,"disagree":0,"error":"[EXPECTED] quote_tx_mismatch"}
+✓ guard/dispute-not-found {"label":"EXPECTED-dispute-not-found","tx":"0xe38301aaa6f3b6142bdee86521239d70e8acc754b761e69e051afe0e92f19738","status":"FINALIZED","leader":"ERROR","agree":3,"disagree":0,"error":"[EXPECTED] dispute_not_found"}
+✓ B-poisoned/relay {"disputeId":1,"itemId":"0xe8dc5c384f1f90327a3d43da62966ac3d93baf5e93d035f63c06f8a010d904de","listTx":"0xb56ee04af4ddfa4b8e3cd4958c535f7a6cf934e60f1bf403d3c6b757eb59f8a8","disputeTx":"0x31eb5e30bf1ecae70a3421bd9b76c603a4
+✓ C-clean-false-challenge/relay {"disputeId":2,"itemId":"0x2a6d7601c9ae69dace12cb77f68c94402d69286e062b639e5b01f7cd7a047398","listTx":"0x145582a7e6df20c01c1b2bd2a40e802aa17807c162bc801218c3324495e8ea83","disputeTx":"0x696ed8dc7ab0bae85086372b8ee8a00283
+✓ D-fabricated-quote/relay {"disputeId":3,"itemId":"0xc8abc04c3d3bbbf10e6d72cdd7952e13ecb650ba1c6ee3dc0f041e2be837521e","listTx":"0xe257e0f1e8346f2f2fd8152af79b3bd6c38606ae1969edda8d0c640b34a8f868","disputeTx":"0x9c2e4f62a545d861a34108d0bda84ca45c
+✓ E-not-pinned/relay {"disputeId":4,"itemId":"0x87febd185bae1c50261d439a352d98fcd2bba5a9a55718e2c13d6390cb7da626","listTx":"0x01ff428da07b30c3683e88d7f16592cad55a0c402a307b455ee292fae8582617","disputeTx":"0x1ed64b532ba877c79d45c807e020f97ebf
+✓ guard/replay {"label":"EXPECTED-replay-judged-dispute","tx":"0xc7b570a57f91b673778da43b6a7a5b9e2555cda2452130a7ca7f9645aa9be2b1","status":"FINALIZED","leader":"ERROR","agree":3,"disagree":0,"error":"[EXPECTED] dispute_already_judged"
+C:\Users\leoki\Genlayer\authena\node_modules\viem\actions\public\waitForTransactionReceipt.ts:265
+        reject(new WaitForTransactionReceiptTimeoutError({ hash }))
+               ^
+
+WaitForTransactionReceiptTimeoutError: Timed out while waiting for transaction with hash "0x71c63b9864584141178efafc79a4578a13b69311313178904e0a19ce29f655d0" to be confirmed.
+
+Version: viem@2.57.20
+    at Timeout.<anonymous> (C:\Users\leoki\Genlayer\authena\node_modules\viem\actions\public\waitForTransactionReceipt.ts:265:16)
+    at listOnTimeout (node:internal/timers:635:17)
+    at process.processTimers (node:internal/timers:571:7) {
+  details: undefined,
+  docsPath: undefined,
+  metaMessages: undefined,
+  shortMessage: 'Timed out while waiting for transaction with hash "0x71c63b9864584141178efafc79a4578a13b69311313178904e0a19ce29f655d0" to be confirmed.',
+  version: '2.57.20'
+}
+
+Node.js v24.19.0

@@ -1,0 +1,12 @@
+✓ F-no-ruling-in-time/refuse {"tx":"0x992b41616e85083c1ee41f508244b3c6342f9234a156b7cb7def33cf78570ffa"}
+┌───────────────────────────┬──────────────────────────┬──────────────────────┬────────┐
+│ (index)                   │ status                   │ finding              │ ruling │
+├───────────────────────────┼──────────────────────────┼──────────────────────┼────────┤
+│ A-real-clean-unchallenged │ 'registered'             │ null                 │ null   │
+│ B-poisoned                │ 'absent'                 │ 'MALICIOUS'          │ 2      │
+│ C-clean-false-challenge   │ 'registered'             │ 'BENIGN'             │ 1      │
+│ D-fabricated-quote        │ 'registered'             │ 'QUOTE_NOT_IN_FILE'  │ 1      │
+│ E-not-pinned              │ 'absent'                 │ 'LISTING_NOT_PINNED' │ 2      │
+│ F-no-ruling-in-time       │ 'registration requested' │ null                 │ null   │
+└───────────────────────────┴──────────────────────────┴──────────────────────┴────────┘
+list tx of B: https://sepolia.etherscan.io/tx/0xb56ee04af4ddfa4b8e3cd4958c535f7a6cf934e60f1bf403d3c6b757eb59f8a8

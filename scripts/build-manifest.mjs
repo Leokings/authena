@@ -65,7 +65,7 @@ const CASES = {
   "C-clean-false-challenge": { shows: "The clean fixture is challenged with an ordinary line about uploading, which is its stated purpose.", expect: { finding: "BENIGN", ruling: 1, status: "registered" } },
   "D-fabricated-quote": { shows: "The clean fixture is challenged with a line that is not in the file. Code decides; validators are not asked.", expect: { finding: "QUOTE_NOT_IN_FILE", ruling: 1, status: "registered" } },
   "E-not-pinned": { shows: "A listing pinned to a branch name instead of a commit. Code decides.", expect: { finding: "LISTING_NOT_PINNED", ruling: 2, status: "absent" } },
-  "F-no-ruling-in-time": { shows: "A dispute nobody judges. After the deadline an outsider closes it as refuse-to-rule.", expect: { status: "absent" } },
+  "F-no-ruling-in-time": { shows: "A dispute nobody judges. After the deadline an outsider closes it as refuse-to-rule.", expect: { status: "absent", refused: true } },
 };
 
 const cases = [];
@@ -102,6 +102,7 @@ for (const [id, meta] of Object.entries(CASES)) {
     entry.readback.curate_status === e.status &&
     (e.finding === undefined || (v?.judged === true && v.finding === e.finding && v.ruling === e.ruling)) &&
     (e.finding !== undefined || !v || v.judged === false) &&
+    (!e.refused || !!entry.sepolia.refuse_tx) &&
     (!rel?.judge || steps.at(-1).counts_as_proof);
   cases.push(entry);
 }

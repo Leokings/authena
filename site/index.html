@@ -70,6 +70,7 @@ blockquote.neutral{border-left-color:var(--line);background:var(--soft)}
 .note{font-size:13px;color:var(--muted);margin-top:14px}
 pre{background:#0c1512;color:#e6f0ec;border-radius:12px;padding:16px;overflow:auto;font:13px/1.6 var(--mono);margin:0 0 12px}
 .cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.cols>div,.steps>div,.case{min-width:0}
 ul.plain{margin:0;padding-left:18px;color:var(--muted)}
 ul.plain li{margin-bottom:6px}
 .partners{display:flex;flex-wrap:wrap;gap:28px;align-items:center}
@@ -169,7 +170,7 @@ npx tsx scripts/authena.ts challenge &lt;owner/repo&gt; &lt;commit&gt; \
   <div class="partners" style="margin-top:14px">
     <img src="partners/internet-court.svg" alt="Internet Court">
     <img src="partners/genlayer.svg" alt="GenLayer">
-    <img src="partners/kleros.svg" alt="Kleros">
+    <span style="display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:20px;color:#4a4b4f"><img src="partners/kleros.svg" alt="">Kleros</span>
   </div>
 </div></section>
 
