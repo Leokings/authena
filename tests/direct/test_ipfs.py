@@ -141,3 +141,54 @@ def test_inline_listing_still_works_alongside(court, direct_vm):
     stage_registration(direct_vm, ACCUSE, listing=LISTING)
     mock_verdict(direct_vm, "MALICIOUS")
     assert judge(court) == "MALICIOUS"
+
+
+# --- Asking by skill version ------------------------------------------------------------
+
+
+def test_a_version_ruled_malicious_is_found_by_version(court, direct_vm):
+    stage_ipfs(direct_vm, item_file(), evidence_file(BAD_LINE))
+    mock_verdict(direct_vm, "MALICIOUS")
+    judge(court)
+    got = court.get_skill(REPO, COMMIT, PATH)
+    assert got["malicious"] is True
+    assert got["verdicts"] == [{"dispute_id": 7, "finding": "MALICIOUS", "request_type": "registration", "ruling": 2, "quote": BAD_LINE, "file": "SKILL.md"}]
+    # The owner name is case-insensitive on GitHub, and slashes around the folder do not matter.
+    assert court.get_skill(REPO.upper(), COMMIT, "/" + PATH + "/")["malicious"] is True
+
+
+def test_a_cleared_version_is_not_malicious(court, direct_vm):
+    stage_registration(direct_vm, {"file": "SKILL.md", "quote": "Run `acme upload <file>` and wait for the link."}, skill=CLEAN_SKILL)
+    mock_verdict(direct_vm, "BENIGN")
+    judge(court)
+    got = court.get_skill(REPO, COMMIT, PATH)
+    assert got["malicious"] is False and [v["finding"] for v in got["verdicts"]] == ["BENIGN"]
+
+
+def test_an_unknown_version_has_no_verdicts(court, direct_vm):
+    assert court.get_skill(REPO, COMMIT, PATH) == {"malicious": False, "verdicts": []}
+    assert court.get_skill("someone/else", "ab" * 20, "") == {"malicious": False, "verdicts": []}
+
+
+def test_a_listing_that_is_not_pinned_is_not_indexed_by_version(court, direct_vm):
+    stage_registration(direct_vm, ACCUSE, listing='{"repo": "acme/skills", "commit": "main", "path": "x"}')
+    judge(court)
+    assert court.get_skill("acme/skills", "main", "x") == {"malicious": False, "verdicts": []}
+
+
+def test_a_second_dispute_about_the_same_version_is_added(court, direct_vm):
+    stage_ipfs(direct_vm, item_file(), evidence_file(BAD_LINE))
+    mock_verdict(direct_vm, "BENIGN")
+    judge(court)
+    # A later removal request against the same version, judged malicious this time.
+    from tests.conftest import REMOVE_TX, dispute_log, evidence_log, request_log, ITEM
+    import json as _json
+    w = world(direct_vm)
+    w.receipt(REMOVE_TX, [request_log(ITEM, 950), evidence_log(950, _json.dumps(ACCUSE))])
+    w.receipt("0x" + format(9, "064x"), [dispute_log(11, 950, 1)])
+    w.dispute_items[11] = ITEM
+    direct_vm.clear_mocks()
+    mock_verdict(direct_vm, "MALICIOUS")
+    assert court.judge(11, LIST_TX, "0x" + format(9, "064x"), REMOVE_TX) == "MALICIOUS"
+    got = court.get_skill(REPO, COMMIT, PATH)
+    assert got["malicious"] is True and [v["dispute_id"] for v in got["verdicts"]] == [7, 11]

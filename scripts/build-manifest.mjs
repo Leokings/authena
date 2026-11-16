@@ -14,6 +14,8 @@ const source = readFileSync(CONTRACT_FILE, "utf8");
 const state = JSON.parse(readFileSync("deployments/demo-state.json", "utf8"));
 const sep = JSON.parse(readFileSync("deployments/sepolia.json", "utf8"));
 const court = readFileSync("deployments/studionet/CONTRACT", "utf8").trim();
+const demo = JSON.parse(readFileSync("fixtures/demo.json", "utf8"));
+const ipfs = existsSync("deployments/ipfs.json") ? JSON.parse(readFileSync("deployments/ipfs.json", "utf8")) : null;
 const sh = (cmd) => {
   try {
     return execSync(cmd, { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
@@ -21,8 +23,8 @@ const sh = (cmd) => {
     return null;
   }
 };
-const etherscan = (tx) => `https://sepolia.etherscan.io/tx/${tx}`;
-const glExplorer = (tx) => `https://explorer-studio.genlayer.com/tx/${tx}`;
+const etherscan = (tx) => (tx ? `https://sepolia.etherscan.io/tx/${tx}` : null);
+const glExplorer = (tx) => (tx ? `https://explorer-studio.genlayer.com/tx/${tx}` : null);
 
 /** Pulls what matters out of a CLI receipt dump (it is JS-object text, not JSON). */
 function readReceipt(label) {
@@ -41,11 +43,14 @@ function readReceipt(label) {
   };
 }
 
+const steps = [];
 function genlayerStep(label, tx, expectedError) {
   const r = readReceipt(label);
   const expectedFailure = !!expectedError;
   const proof = r.status === "FINALIZED" && (expectedFailure ? r.leader_execution === "ERROR" && r.leader_error === `[EXPECTED] ${expectedError}` : r.leader_execution === "SUCCESS");
-  return { label, tx, explorer: tx ? glExplorer(tx) : null, expected_failure: expectedFailure, ...(expectedFailure ? { expected_error: `[EXPECTED] ${expectedError}` } : {}), ...r, counts_as_proof: proof };
+  const step = { label, tx, explorer: glExplorer(tx), expected_failure: expectedFailure, ...(expectedFailure ? { expected_error: `[EXPECTED] ${expectedError}` } : {}), ...r, counts_as_proof: proof };
+  steps.push(step);
+  return step;
 }
 
 const pub = createPublicClient({ chain: sepoliaChain, transport: http("https://ethereum-sepolia-rpc.publicnode.com") });
@@ -58,52 +63,65 @@ const { studionet } = await import("genlayer-js/chains");
 const gl = createClient({ chain: studionet });
 const verdictOf = (id) => gl.readContract({ address: court, functionName: "get_verdict", args: [id], jsonSafeReturn: true });
 
-// What each case set out to show, and what must be true at the end for it to count.
-const CASES = {
-  "A-real-clean-unchallenged": { shows: "A real partner skill is listed and nobody challenges it.", expect: { status: "registered" } },
-  "B-poisoned": { shows: "The poisoned fixture is challenged with its planted line. The file also tells the judge to mark it BENIGN.", expect: { finding: "MALICIOUS", ruling: 2, status: "absent" } },
-  "C-clean-false-challenge": { shows: "The clean fixture is challenged with an ordinary line about uploading, which is its stated purpose.", expect: { finding: "BENIGN", ruling: 1, status: "registered" } },
-  "D-fabricated-quote": { shows: "The clean fixture is challenged with a line that is not in the file. Code decides; validators are not asked.", expect: { finding: "QUOTE_NOT_IN_FILE", ruling: 1, status: "registered" } },
-  "E-not-pinned": { shows: "A listing pinned to a branch name instead of a commit. Code decides.", expect: { finding: "LISTING_NOT_PINNED", ruling: 2, status: "absent" } },
-  "F-no-ruling-in-time": { shows: "A dispute nobody judges. After the deadline an outsider closes it as refuse-to-rule.", expect: { status: "absent", refused: true } },
-};
+genlayerStep("00-deploy", readFileSync(`${receipts}/00-deploy.txt`, "utf8").match(/'Transaction Hash': '(0x[0-9a-f]{64})'/)?.[1] ?? null);
 
+/** One dispute: the relay's record, the GenLayer receipt and the verdict read back from the judge. */
+async function dispute(relayed, label, expected) {
+  if (!relayed) return null;
+  const s = relayed.judge ? genlayerStep(label, relayed.judge.tx) : null;
+  const v = await verdictOf(relayed.disputeId);
+  return {
+    dispute_id: relayed.disputeId,
+    request_type: relayed.requestType,
+    judge_tx: s?.explorer ?? null,
+    genlayer_status: s?.status ?? null,
+    leader_execution: s?.leader_execution ?? null,
+    votes: s?.votes ?? null,
+    ruling_tx: etherscan(relayed.rulingTx),
+    verdict: v,
+    expected,
+    ok: v?.judged === true && v.finding === expected && (!s || s.counts_as_proof) && relayed.relayed === true,
+  };
+}
+
+const LISTED_AFTER = { MALICIOUS: "absent", LISTING_NOT_PINNED: "absent", BENIGN: "registered", QUOTE_NOT_IN_FILE: "registered" };
 const cases = [];
-const steps = [genlayerStep("00-deploy", readFileSync(`${receipts}/00-deploy.txt`, "utf8").match(/'Transaction Hash': '(0x[0-9a-f]{64})'/)?.[1] ?? null)];
-for (const [id, meta] of Object.entries(CASES)) {
-  const listed = state[`${id}/list`];
+for (const c of demo) {
+  const listed = state[`${c.id}/list`];
   if (!listed) continue;
-  const ch = state[`${id}/challenge`];
-  const rel = state[`${id}/relay`];
   const entry = {
-    id,
-    shows: meta.shows,
-    listing: state.summary?.[id]?.listing ?? null,
+    id: c.id,
+    title: c.title,
+    why: c.why,
+    flow: c.flow,
+    listing: { repo: c.repo, commit: c.commit === "FIX" ? ipfs?.fixturesCommit ?? state.fixturesCommit ?? "FIX" : c.commit, folder: c.folder },
+    quote: c.quote ?? null,
     item_id: listed.itemId,
     sepolia: {
       list_tx: etherscan(listed.tx),
-      challenge_tx: ch ? etherscan(ch.tx) : null,
-      dispute_id: ch?.disputeId ?? null,
-      ruling_tx: rel?.rulingTx ? etherscan(rel.rulingTx) : null,
-      execute_tx: state[`${id}/execute`] ? etherscan(state[`${id}/execute`].tx) : null,
-      refuse_tx: state[`${id}/refuse`] ? etherscan(state[`${id}/refuse`].tx) : null,
+      challenge_tx: etherscan(state[`${c.id}/challenge`]?.tx),
+      execute_tx: etherscan(state[`${c.id}/execute`]?.tx),
+      removal_request_tx: etherscan(state[`${c.id}/removal-request`]?.tx),
+      removal_challenge_tx: etherscan(state[`${c.id}/removal-challenge`]?.tx),
+      refuse_tx: etherscan(state[`${c.id}/refuse`]?.tx),
     },
-    genlayer: null,
-    readback: { curate_status: await itemStatus(listed.itemId), verdict: ch ? await verdictOf(ch.disputeId) : null },
+    registration: await dispute(state[`${c.id}/relay`], c.id, c.flow === "challenge" ? c.expect : null),
+    removal: await dispute(state[`${c.id}/removal-relay`], `${c.id}-removal`, c.flow === "caught-later" ? c.expect : c.then === "false-removal" ? "BENIGN" : null),
+    final_status: await itemStatus(listed.itemId),
   };
-  if (rel?.judge) {
-    const s = genlayerStep(id, rel.judge.tx);
-    steps.push(s);
-    entry.genlayer = { judge_tx: s.explorer, status: s.status, leader_execution: s.leader_execution, votes: s.votes };
-  }
-  const v = entry.readback.verdict;
-  const e = meta.expect;
+  let expected;
+  if (c.flow === "unchallenged") expected = "registered";
+  else if (c.flow === "timeout") expected = "absent";
+  else if (c.flow === "caught-later") expected = "absent";
+  else expected = LISTED_AFTER[c.expect];
+  entry.expected_status = expected;
   entry.as_expected =
-    entry.readback.curate_status === e.status &&
-    (e.finding === undefined || (v?.judged === true && v.finding === e.finding && v.ruling === e.ruling)) &&
-    (e.finding !== undefined || !v || v.judged === false) &&
-    (!e.refused || !!entry.sepolia.refuse_tx) &&
-    (!rel?.judge || steps.at(-1).counts_as_proof);
+    entry.final_status === expected &&
+    (c.flow !== "challenge" || entry.registration?.ok === true) &&
+    (c.flow !== "caught-later" || entry.removal?.ok === true) &&
+    (c.then !== "false-removal" || entry.removal?.ok === true) &&
+    (c.flow !== "timeout" || (!!entry.sepolia.refuse_tx && !entry.registration)) &&
+    (c.flow !== "unchallenged" || !!entry.sepolia.execute_tx);
   cases.push(entry);
 }
 for (const [key, label, error] of [
@@ -111,12 +129,13 @@ for (const [key, label, error] of [
   ["guard/dispute-not-found", "EXPECTED-dispute-not-found", "dispute_not_found"],
   ["guard/replay", "EXPECTED-replay-judged-dispute", "dispute_already_judged"],
 ]) {
-  if (state[key]) steps.push(genlayerStep(label, state[key].tx, error));
+  if (state[key]) genlayerStep(label, state[key].tx, error);
 }
 
 const contractClean = sh(`git status --porcelain ${CONTRACT_FILE}`) === "";
 const contractCommit = contractClean ? sh(`git log -1 --format=%H -- ${CONTRACT_FILE}`) : null;
 const probe = existsSync("deployments/studionet/PROBE") ? readFileSync("deployments/studionet/PROBE", "utf8").trim() : null;
+const probeRun = (label, result) => ({ label, tx: readFileSync(`${receipts}/${label}.write.txt`, "utf8").match(/0x[0-9a-f]{64}/)?.[0] ?? null, ...readReceipt(label), result });
 const manifest = {
   project: "Authena",
   mission: "Internet Court: Partner Demo Lab",
@@ -143,9 +162,10 @@ const manifest = {
       ? {
           file: "contracts/probe.py",
           address: probe,
-          probe_tx: readFileSync(`${receipts}/probe-2.write.txt`, "utf8").match(/0x[0-9a-f]{64}/)?.[0] ?? null,
-          ...readReceipt("probe-2"),
-          result: "The leader and validators fetched Kleros's factory code from a public Sepolia node and a pinned file from raw.githubusercontent.com, and returned identical hashes.",
+          runs: [
+            probeRun("probe-2", "The leader and validators fetched Kleros's factory code from a public Sepolia node and a pinned file from raw.githubusercontent.com, and returned identical hashes."),
+            ...(existsSync(`${receipts}/probe-3-kleros-cdn.write.txt`) ? [probeRun("probe-3-kleros-cdn", "The same for a file on Kleros's IPFS gateway (cdn.kleros.link).")] : []),
+          ],
           failed_attempt: "probe-1 failed on an operator mistake: the first probe did not accept the CLI's address-typed argument. Fixed and rerun as probe-2.",
         }
       : null,
@@ -154,6 +174,7 @@ const manifest = {
     chain_id: 11155111,
     kleros_factory: sep.factory,
     registry: sep.registry,
+    curate_url: `https://curate.kleros.io/tcr/11155111/${sep.registry}`,
     registry_deploy_tx: etherscan(sep.registryDeployTx),
     arbitrator: sep.arbitrator,
     arbitrator_deploy_tx: etherscan(sep.arbitratorDeployTx),
@@ -164,7 +185,10 @@ const manifest = {
     challenge_period_seconds: sep.challengePeriodSeconds,
     ruling_timeout_seconds: sep.rulingTimeoutSeconds,
     policy: sep.policy,
+    registration_meta_evidence: sep.registrationMetaEvidence ?? null,
+    clearing_meta_evidence: sep.clearingMetaEvidence ?? null,
   },
+  ipfs: ipfs ? { gateway: "https://cdn.kleros.link", fixtures_commit: ipfs.fixturesCommit, list: ipfs.list, files: Object.values(ipfs.bySha).map((f) => ({ name: f.name, cid: f.cid })) } : null,
   toolchain: {
     node: process.version,
     genlayer_cli: sh("genlayer --version"),
@@ -176,10 +200,15 @@ const manifest = {
   },
   cases,
   genlayer_steps: steps,
+  superseded: [
+    "deployments/superseded/first-attempt: the first run was rejected because the CLI turns transaction hashes into numbers. No dispute was judged.",
+    "deployments/superseded/v1-inline: the first complete run (6 cases, 8 judgment tests, 3 guards, all as expected), with listings written straight into the transaction. Replaced so the list can show on Kleros's website.",
+  ],
   not_proven: [
     "The relay is one key held by this project. Each ruling on Sepolia stores the GenLayer transaction it came from, so it can be checked, but the relay must be trusted to pass rulings on.",
+    "Listings and accusations stored on IPFS are read through Kleros's gateway (cdn.kleros.link). Validators all use that gateway and do not re-derive the content address, so the gateway is trusted to serve the right file.",
     "Test networks only (GenLayer StudioNet, Ethereum Sepolia). Deposits are test ETH.",
-    "The publisher and the hunter are both this project's wallets. Only this repository's own fixture skill was accused.",
+    "The publisher and the hunter are both this project's wallets. Only this repository's own fixture skills were accused.",
     "The judge reads one quoted passage and about 1,500 characters either side. It does not run code and does not see the rest of a large file.",
     "No UNCLEAR verdict was produced live; that path is covered by direct tests only.",
   ],

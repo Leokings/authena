@@ -40,6 +40,7 @@ MAX_QUOTE_CHARS = 600
 MAX_PURPOSE_CHARS = 600
 CONTEXT_CHARS = 1_500  # shown to validators on each side of the quote
 MAX_DISPUTE_ID = 10**12
+MAX_DISPUTES_PER_SKILL = 20
 
 REQUEST_TYPES = ("registration", "removal")
 VERDICTS = ("MALICIOUS", "BENIGN", "UNCLEAR")
@@ -487,6 +488,11 @@ def _judge(case: dict[str, Any]) -> str:
     return gl.vm.run_nondet_unsafe(leader, validator)
 
 
+def _skill_key(repo: str, commit: str, path: str) -> str:
+    # GitHub treats owner and repository names case-insensitively; paths are case-sensitive.
+    return f"{repo.lower()}@{commit}/{path}"
+
+
 def _ruling(finding: str, request_type: str) -> int:
     """Deterministic: who wins on Curate. In a registration the publisher is the requester; in a
     removal the accuser is."""
@@ -503,6 +509,7 @@ class SkillCourt(gl.Contract):
     arbitrator: str
     verdicts: TreeMap[str, str]
     order: DynArray[str]
+    by_skill: TreeMap[str, str]  # one skill version -> the disputes that judged it
 
     def __init__(self, registry: Any, arbitrator: Any) -> None:
         self.registry = _addr(registry)
@@ -548,6 +555,14 @@ class SkillCourt(gl.Contract):
         }
         self.verdicts[key] = json.dumps(record, sort_keys=True)
         self.order.append(key)
+        if case["commit"]:
+            # A version ruled MALICIOUS stays so under any later listing of the same commit, so a
+            # checker can ask by version and need not find every Curate item that names it.
+            skill = _skill_key(case["repo"], case["commit"], case["path"])
+            seen = json.loads(self.by_skill[skill]) if skill in self.by_skill else []
+            if len(seen) < MAX_DISPUTES_PER_SKILL:
+                seen.append(dispute_id)
+                self.by_skill[skill] = json.dumps(seen)
         return finding
 
     @gl.public.view
@@ -556,6 +571,17 @@ class SkillCourt(gl.Contract):
         if key not in self.verdicts:
             return {"judged": False}
         return {"judged": True, **json.loads(self.verdicts[key])}
+
+    @gl.public.view
+    def get_skill(self, repo: str, commit: str, path: str) -> dict[str, Any]:
+        """Every verdict about one skill version, and whether any of them found it malicious."""
+        skill = _skill_key(str(repo), str(commit), str(path).strip("/"))
+        ids = json.loads(self.by_skill[skill]) if skill in self.by_skill else []
+        verdicts = []
+        for dispute_id in ids:
+            v = json.loads(self.verdicts[str(dispute_id)])
+            verdicts.append({"dispute_id": dispute_id, "finding": v["finding"], "request_type": v["request_type"], "ruling": v["ruling"], "quote": v["quote"], "file": v["file"]})
+        return {"malicious": any(v["finding"] == "MALICIOUS" for v in verdicts), "verdicts": verdicts}
 
     @gl.public.view
     def list_verdicts(self, start: int, count: int) -> list[dict[str, Any]]:

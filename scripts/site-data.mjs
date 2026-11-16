@@ -1,74 +1,45 @@
 #!/usr/bin/env node
 // Builds site/data.json: the release manifest plus short "case file" cards for the page.
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 
 const m = JSON.parse(readFileSync("deployments/release-manifest.json", "utf8"));
-const tests = existsSync("deployments/judgment-tests.json") ? JSON.parse(readFileSync("deployments/judgment-tests.json", "utf8")) : null;
-const quotes = Object.fromEntries(JSON.parse(readFileSync("fixtures/cases.json", "utf8")).map((c) => [c.id, c]));
-
-const TITLES = {
-  "A-real-clean-unchallenged": "Kleros's own Curate skill",
-  "B-poisoned": "The poisoned uploader",
-  "C-clean-false-challenge": "A false alarm",
-  "D-fabricated-quote": "A made-up quote",
-  "E-not-pinned": "Pinned to a branch",
-  "F-no-ruling-in-time": "Nobody ruled in time",
-  "honest-cli-installer": "Installs its own tool",
-  "honest-payments": "Pays what you confirm",
-  "honest-security-notes": "Only describes attacks",
-  "sneaky-transcript-leak": "Leaks your chat",
-  "sneaky-token-approval": "Sneaks a token approval",
-  "sneaky-remote-loader": "Obeys a remote file",
-  "removal-caught-later": "Listed, then caught",
-  "removal-false": "A removal that failed",
-};
-const stampFor = (finding, fallback) =>
-  finding === "MALICIOUS" ? ["bad", "Busted"] : finding === "BENIGN" ? ["ok", "Cleared"] : finding ? ["hm", "Thrown out"] : fallback;
 const last = (path) => (path || "").split("/").filter(Boolean).pop() ?? "";
-const checkable = (l) => (l && /^[0-9a-f]{40}$/.test(l.commit) && !/^\/|\/$/.test(l.path) ? `github.com/${l.repo}/tree/${l.commit}/${l.path}` : null);
 
-const cards = [];
-for (const c of m.cases) {
-  const v = c.readback.verdict?.judged ? c.readback.verdict : null;
-  const l = c.listing ? JSON.parse(c.listing) : null;
-  const [tone, stamp] = stampFor(v?.finding, c.sepolia.refuse_tx ? ["hm", "Timed out"] : ["ok", "Listed"]);
-  cards.push({
+const cards = m.cases.map((c) => {
+  const reg = c.registration?.verdict?.judged ? c.registration.verdict.finding : null;
+  const rem = c.removal?.verdict?.judged ? c.removal.verdict.finding : null;
+  let tone = "hm";
+  let stamp = "Pending";
+  if (c.flow === "unchallenged") [tone, stamp] = ["ok", "Listed"];
+  else if (c.flow === "timeout") [tone, stamp] = ["hm", "Timed out"];
+  else if (c.flow === "caught-later") [tone, stamp] = rem === "MALICIOUS" ? ["bad", "Busted"] : ["hm", rem ?? "Pending"];
+  else if (reg === "MALICIOUS") [tone, stamp] = ["bad", "Busted"];
+  else if (reg === "BENIGN") [tone, stamp] = ["ok", "Cleared"];
+  else if (reg) [tone, stamp] = ["hm", "Thrown out"];
+  const l = c.listing;
+  const pinned = /^[0-9a-f]{40}$/.test(l.commit);
+  return {
     id: c.id,
     tone,
     stamp,
-    title: TITLES[c.id] ?? c.shows,
-    who: l ? `${l.repo} · ${last(l.path)}` : "",
-    short: last(l?.path),
-    quote: v?.quote || null,
-    link: checkable(l),
+    title: c.title,
+    who: `${l.repo} · ${last(l.folder)}`,
+    short: last(l.folder),
+    quote: c.quote,
+    listed: c.final_status === "registered",
+    link: pinned ? `github.com/${l.repo}/tree/${l.commit}/${l.folder}` : null,
     links: [
       ["listed", c.sepolia.list_tx],
       ["challenged", c.sepolia.challenge_tx],
-      ["judged", c.genlayer?.judge_tx],
-      ["paid", c.sepolia.ruling_tx],
+      ["judged", c.registration?.judge_tx],
+      ["paid", c.registration?.ruling_tx],
       ["registered", c.sepolia.execute_tx],
+      ["removal asked", c.sepolia.removal_request_tx],
+      ["removal judged", c.removal?.judge_tx],
+      ["removal paid", c.removal?.ruling_tx],
       ["closed", c.sepolia.refuse_tx],
     ],
-  });
-}
-for (const t of tests?.results ?? []) {
-  const [tone, stamp] = stampFor(t.got, ["hm", "Pending"]);
-  const base = t.id.startsWith("removal-") ? (t.id === "removal-false" ? "honest-payments" : "sneaky-transcript-leak") : t.id;
-  cards.push({
-    id: t.id,
-    tone,
-    stamp,
-    title: TITLES[t.id] ?? t.id,
-    who: `test · ${base}${t.request_type === "removal" ? " · removal" : ""}`,
-    short: t.id,
-    quote: quotes[base]?.quote ?? null,
-    link: null,
-    links: [
-      ["judged", t.genlayer_tx],
-      ["paid", t.ruling_tx],
-    ],
-    pass: t.pass,
-  });
-}
-writeFileSync("site/data.json", JSON.stringify({ ...m, tests: tests?.results ?? [], cards }, null, 2) + "\n");
+  };
+});
+writeFileSync("site/data.json", JSON.stringify({ ...m, cards }, null, 2) + "\n");
 console.log(`site/data.json: ${cards.length} cards`);

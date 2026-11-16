@@ -8,7 +8,7 @@
  *
  * Writes deployments/sepolia.json. Refuses to run twice unless --force is passed.
  */
-import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { decodeEventLog, formatEther, parseEther, zeroAddress } from "viem";
 import { artifact, DEPLOYMENT, explorerTx, FACTORY, factoryAbi, pub, signerKey, wallet } from "./lib";
 
@@ -17,6 +17,10 @@ const CHALLENGE_PERIOD = 600n; // 10 minutes, for a demo list
 const RULING_TIMEOUT = 1800n; // after 30 minutes without a ruling anyone can close the dispute
 const ARBITRATION_FEE = 0n;
 const POLICY = "https://github.com/Leokings/authena/blob/main/docs/POLICY.md";
+// With the list's files on IPFS (scripts/kleros-upload.ts), the list also shows on Kleros's website.
+const ipfs = existsSync("deployments/ipfs.json") ? JSON.parse(readFileSync("deployments/ipfs.json", "utf8")).list : undefined;
+const REGISTRATION = ipfs?.registrationMetaEvidence ?? POLICY;
+const CLEARING = ipfs?.clearingMetaEvidence ?? POLICY;
 
 if (existsSync(DEPLOYMENT) && !process.argv.includes("--force")) {
   console.error(`${DEPLOYMENT} already exists. Pass --force to deploy a new list.`);
@@ -41,8 +45,8 @@ const listTx = await w.writeContract({
     arbitrator,
     "0x",
     zeroAddress, // no connected list
-    POLICY, // registration policy
-    POLICY, // removal policy
+    REGISTRATION, // what Curate shows when a skill is being added
+    CLEARING, // and when one is being removed
     deployer, // governor
     [DEPOSIT, DEPOSIT, DEPOSIT, DEPOSIT], // submission, removal, submission challenge, removal challenge
     CHALLENGE_PERIOD,
@@ -80,7 +84,10 @@ writeFileSync(
       arbitrationFeeWei: ARBITRATION_FEE.toString(),
       challengePeriodSeconds: Number(CHALLENGE_PERIOD),
       rulingTimeoutSeconds: Number(RULING_TIMEOUT),
-      policy: POLICY,
+      policy: ipfs?.policy ?? POLICY,
+      registrationMetaEvidence: REGISTRATION,
+      clearingMetaEvidence: CLEARING,
+      curateUrl: `https://curate.kleros.io/tcr/11155111/${registry}`,
       arbitratorSource: "evm/GenLayerArbitrator.sol",
       compiler: (arb as any).compiler,
     },
