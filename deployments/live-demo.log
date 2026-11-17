@@ -1,0 +1,620 @@
+✓ kleros-curate/list {"tx":"0x191e5b3434b9bca5dcd0409b61b3aafde2f95c12eff97e9aae4716fb56dd0139","itemId":"0x1e986e3d1034a2bc8320de359c26d0842ad5a2a6006a17a1bdc7b340f48948b1"}
+✓ pdf-summarizer/list {"tx":"0xaf5fdbe46c05c7bc1ddb18f2078a41fc4c8ac9f5a3a1c9207e95297773da0eaf","itemId":"0x4c6aa6a14303febd126b8b5888622929cbb3b355c4a5964a1e9e673611db5860"}
+✓ poisoned-uploader/list {"tx":"0x2f635cf0dac2a113983ef9c1951a06ce22ded6a7cc1fa0b9b5d804edf735cc15","itemId":"0x51f4e7a5a27513f48114d99464736fbaec9ed90cb544e9bda5d57e14083b8946"}
+✓ file-uploader/list {"tx":"0x19954d8e8f01f0790a37866904f438486c7a34f2b43ca4b04815dcb3c46afb82","itemId":"0x22855b18584791191e199a03d78beb44c12954c9cb2cfe037c111d7be18dc3da"}
+✓ honest-cli-installer/list {"tx":"0xbd42b083c74595d730c3ef7bcb5d147b3d6e4a887213490bcc77d0a955f8cd9a","itemId":"0xc106f5050cc95255fe13b849539ee20b6117afb5b3a2ccc197747a38f16102c5"}
+✓ honest-payments/list {"tx":"0x610b0fcf801403e170b489d636b87d042b2c28b43c6443c8e16c73d7e8ae6ddb","itemId":"0x57f0ef3dd13a7e2e04f45512cf5bb89d6e3700c070ef984d9b30276449ca8c6b"}
+✓ honest-security-notes/list {"tx":"0x9693d3e3d5cb53c9d708821a456373bf404e80fc89a817652000ce88b2091510","itemId":"0xcc6a04845f5f7f45a4202cb331721098b2e6e1ef6b8077d6ee68b5976ae21dd7"}
+✓ sneaky-transcript-leak/list {"tx":"0xf020b1f0c851a81e389cb6414495322c27bdb2821be5f1a416a6368392f80e75","itemId":"0x361ce21aef09a1703b87a2f476357285003e1b4cec75a390f10aaf7d794acc0e"}
+✓ sneaky-token-approval/list {"tx":"0xfbc2ee5b237b09e04c2dc4a8472b3199b004e4b3f319642ca671dede52081ffb","itemId":"0xe5d10172ba9fe175b64d618da5bdb0f61b87dc4962774c230ea550592e2956c8"}
+✓ sneaky-remote-loader/list {"tx":"0x8853f32b2f9e62d26186c4707e25aa69dd0656fc33dff4eefed2d4b8c8ee257e","itemId":"0x08e781cc1da640bb40517efd93b565bd57a9bbca8482e4aed6d5d443b87be9ce"}
+✓ markdown-tidy/list {"tx":"0xdf0d4a3aa292f1218454d89247f7046e1c0bdb9a3d1f92e6ffecef6519fbda15","itemId":"0x79c2396dec30c91ded46b3a83c61720d507126a3c1ca621df7de27036d907d55"}
+✓ not-pinned/list {"tx":"0x6f03ae8e98a14935a4352b9bd9ee436ec19a3c5a7068934399c6b602c6bc912e","itemId":"0xae2c96f4df6e94f4db66f9bb88f8b750ba510d584787da49ad65f56cc75fc7fc"}
+✓ weather-lookup/list {"tx":"0xad849669cb0f1444cdab1b5d7f3fd3e6de8cb4cf89ec4f29c99069ffecba3a0b","itemId":"0x401cbd0bef9c648bf5c49d71a0c01e5a89b1e2cd3f1ddfa3d6d47d0f77cc53a7"}
+✓ poisoned-uploader/challenge {"tx":"0x0e29c018e8fccaa1841dbb7e6f1040b7ce04ba154ac554553f2495d8f391aef3","disputeId":1}
+✓ file-uploader/challenge {"tx":"0xcf8d0ad12f272d442d48892e38793c58fe1c9247e56c0412639371ab43099d27","disputeId":2}
+✓ honest-cli-installer/challenge {"tx":"0x89e724a8e8fe16c3678a5e8479d2b1b4fae04c694ba5bbae62c662eae3cdfa24","disputeId":3}
+✓ honest-payments/challenge {"tx":"0x434507993ba6a762e20f4cc2b69b0197562b63e38f76378c127ce4ad49d82877","disputeId":4}
+✓ honest-security-notes/challenge {"tx":"0xab586934a5021658b616ce53c7c43e4091abb18241ec88b0e0b758a5c3417819","disputeId":5}
+✓ sneaky-transcript-leak/challenge {"tx":"0x305d6ab26f8026e0c739334fbed95f15fa65c196f95d63343c046386ce02f529","disputeId":6}
+✓ sneaky-token-approval/challenge {"tx":"0x2a4f5e03c68b48871ae3be7e9daff02f3fd0d74e68ae0dd7994e420991e31f56","disputeId":7}
+✓ sneaky-remote-loader/challenge {"tx":"0x853af11d22b815bc231bd35d50ca9728e80c9251d5b49c19bac25c89ccfabaf2","disputeId":8}
+✓ markdown-tidy/challenge {"tx":"0xcbc3bce7e3e8dd0fcd89493b8fb39946ea2a635c0566c11c47de1414ebfbeda7","disputeId":9}
+✓ not-pinned/challenge {"tx":"0x67fac5634d68601c6317e00a4f16b8a83b35ce606ab6999df6e76b06d5cb801b","disputeId":10}
+✓ weather-lookup/challenge {"tx":"0x510a1a1013b16177a09463b73ca1fd01fc47c1cfd2875e869ac5862c8a0f5413","disputeId":11}
+✓ guard/quote-tx-mismatch {"label":"EXPECTED-quote-tx-mismatch","tx":"0xcc1c4e0bcb206404c01b9e74a8cbe2420bd5ae878519fee8b01afb062d2e8479","status":"FINALIZED","leader":"ERROR","agree":3,"disagree":0,"error":"[EXPECTED] quote_t
+✓ guard/dispute-not-found {"label":"EXPECTED-dispute-not-found","tx":"0x6b68f7d277292f301d4790fa3f18c3a56fe5c1a76d467e29b979749eee73a12a","status":"FINALIZED","leader":"ERROR","agree":3,"disagree":0,"error":"[EXPECTED] dispute
+✓ poisoned-uploader/relay {"disputeId":1,"itemId":"0x51f4e7a5a27513f48114d99464736fbaec9ed90cb544e9bda5d57e14083b8946","listTx":"0x2f635cf0dac2a113983ef9c1951a06ce22ded6a7cc1fa0b9b5d804edf735cc15","disputeTx":"0x0e29c018e8fcca
+✓ file-uploader/relay {"disputeId":2,"itemId":"0x22855b18584791191e199a03d78beb44c12954c9cb2cfe037c111d7be18dc3da","listTx":"0x19954d8e8f01f0790a37866904f438486c7a34f2b43ca4b04815dcb3c46afb82","disputeTx":"0xcf8d0ad12f272d
+✓ honest-cli-installer/relay {"disputeId":3,"itemId":"0xc106f5050cc95255fe13b849539ee20b6117afb5b3a2ccc197747a38f16102c5","listTx":"0xbd42b083c74595d730c3ef7bcb5d147b3d6e4a887213490bcc77d0a955f8cd9a","disputeTx":"0x89e724a8e8fe16
+✓ honest-payments/relay {"disputeId":4,"itemId":"0x57f0ef3dd13a7e2e04f45512cf5bb89d6e3700c070ef984d9b30276449ca8c6b","listTx":"0x610b0fcf801403e170b489d636b87d042b2c28b43c6443c8e16c73d7e8ae6ddb","disputeTx":"0x434507993ba6a7
+✓ honest-security-notes/relay {"disputeId":5,"itemId":"0xcc6a04845f5f7f45a4202cb331721098b2e6e1ef6b8077d6ee68b5976ae21dd7","listTx":"0x9693d3e3d5cb53c9d708821a456373bf404e80fc89a817652000ce88b2091510","disputeTx":"0xab586934a50216
+✓ sneaky-transcript-leak/relay {"disputeId":6,"itemId":"0x361ce21aef09a1703b87a2f476357285003e1b4cec75a390f10aaf7d794acc0e","listTx":"0xf020b1f0c851a81e389cb6414495322c27bdb2821be5f1a416a6368392f80e75","disputeTx":"0x305d6ab26f8026
+✓ sneaky-token-approval/relay {"disputeId":7,"itemId":"0xe5d10172ba9fe175b64d618da5bdb0f61b87dc4962774c230ea550592e2956c8","listTx":"0xfbc2ee5b237b09e04c2dc4a8472b3199b004e4b3f319642ca671dede52081ffb","disputeTx":"0x2a4f5e03c68b48
+✓ sneaky-remote-loader/relay {"disputeId":8,"itemId":"0x08e781cc1da640bb40517efd93b565bd57a9bbca8482e4aed6d5d443b87be9ce","listTx":"0x8853f32b2f9e62d26186c4707e25aa69dd0656fc33dff4eefed2d4b8c8ee257e","disputeTx":"0x853af11d22b815
+✓ markdown-tidy/relay {"disputeId":9,"itemId":"0x79c2396dec30c91ded46b3a83c61720d507126a3c1ca621df7de27036d907d55","listTx":"0xdf0d4a3aa292f1218454d89247f7046e1c0bdb9a3d1f92e6ffecef6519fbda15","disputeTx":"0xcbc3bce7e3e8dd
+✓ not-pinned/relay {"disputeId":10,"itemId":"0xae2c96f4df6e94f4db66f9bb88f8b750ba510d584787da49ad65f56cc75fc7fc","listTx":"0x6f03ae8e98a14935a4352b9bd9ee436ec19a3c5a7068934399c6b602c6bc912e","disputeTx":"0x67fac5634d686
+✓ guard/replay {"label":"EXPECTED-replay-judged-dispute","tx":"0x24bd050ac960b98f85151a00a155598383ce26ac3cd7c6f3d10e2f6bbef0df6b","status":"FINALIZED","leader":"ERROR","agree":3,"disagree":0,"error":"[EXPECTED] dis
+✓ kleros-curate/execute {"tx":"0xa4cc43e7052cce2b26d41d6b260658f57ecd886eb6d0364d2fe8f447e6020db9"}
+✓ pdf-summarizer/execute {"tx":"0xccde7c27b833bcbe8ab8f9cfbd36a47f5b97bad5e2b9a1e9c80130fce4326a6e"}
+✓ pdf-summarizer/removal-request {"tx":"0xb701e708ad5ba33fbb1733b92f6f7015abff5b318776d308012e285de50445c6"}
+✓ pdf-summarizer/removal-challenge {"tx":"0x2e96675cf8d8e4ab6e16ab61767e041fc330d8c44fe92a6b4dd7cabc1d07ce53","disputeId":12}
+✓ pdf-summarizer/removal-relay {"disputeId":12,"itemId":"0x4c6aa6a14303febd126b8b5888622929cbb3b355c4a5964a1e9e673611db5860","listTx":"0xaf5fdbe46c05c7bc1ddb18f2078a41fc4c8ac9f5a3a1c9207e95297773da0eaf","disputeTx":"0x2e96675cf8d8e
+C:\Users\leoki\Genlayer\authena\node_modules\viem\utils\errors\getContractError.ts:84
+  return new ContractFunctionExecutionError(cause as BaseError, {
+         ^
+
+ContractFunctionExecutionError: HTTP request failed.
+
+URL: https://ethereum-sepolia-rpc.publicnode.com/
+Request body: {"method":"eth_call","params":[{"data":"0x4aac84e557f0ef3dd13a7e2e04f45512cf5bb89d6e3700c070ef984d9b30276449ca8c6b","to":"0xE65c0acB049CD1FF44D647188F11414b8E51fefF"},"latest"]}
+ 
+Raw Call Arguments:
+  to:    0xE65c0acB049CD1FF44D647188F11414b8E51fefF
+  data:  0x4aac84e557f0ef3dd13a7e2e04f45512cf5bb89d6e3700c070ef984d9b30276449ca8c6b
+ 
+Contract Call:
+  address:   0xE65c0acB049CD1FF44D647188F11414b8E51fefF
+  function:  getItemInfo(bytes32 _itemID)
+  args:                 (0x57f0ef3dd13a7e2e04f45512cf5bb89d6e3700c070ef984d9b30276449ca8c6b)
+
+Docs: https://viem.sh/docs/contract/readContract
+Details: fetch failed
+Version: viem@2.57.20
+    at getContractError (C:\Users\leoki\Genlayer\authena\node_modules\viem\utils\errors\getContractError.ts:84:10)
+    at readContract (C:\Users\leoki\Genlayer\authena\node_modules\viem\actions\public\readContract.ts:140:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async status (C:\Users\leoki\Genlayer\authena\scripts\curate-lib.ts:54:18)
+    at async <anonymous> (C:\Users\leoki\Genlayer\authena\scripts\live-demo.ts:95:8) {
+  cause: CallExecutionError: HTTP request failed.
+  
+  URL: https://ethereum-sepolia-rpc.publicnode.com/
+  Request body: {"method":"eth_call","params":[{"data":"0x4aac84e557f0ef3dd13a7e2e04f45512cf5bb89d6e3700c070ef984d9b30276449ca8c6b","to":"0xE65c0acB049CD1FF44D647188F11414b8E51fefF"},"latest"]}
+   
+  Raw Call Arguments:
+    to:    0xE65c0acB049CD1FF44D647188F11414b8E51fefF
+    data:  0x4aac84e557f0ef3dd13a7e2e04f45512cf5bb89d6e3700c070ef984d9b30276449ca8c6b
+  
+  Details: fetch failed
+  Version: viem@2.57.20
+      at getCallError (C:\Users\leoki\Genlayer\authena\node_modules\viem\utils\errors\getCallError.ts:42:10)
+      at call (C:\Users\leoki\Genlayer\authena\node_modules\viem\_esm\actions\public\call.js:182:15)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async readContract (C:\Users\leoki\Genlayer\authena\node_modules\viem\actions\public\readContract.ts:124:22)
+      at async status (C:\Users\leoki\Genlayer\authena\scripts\curate-lib.ts:54:18)
+      at async <anonymous> (C:\Users\leoki\Genlayer\authena\scripts\live-demo.ts:95:8) {
+    cause: HttpRequestError: HTTP request failed.
+    
+    URL: https://ethereum-sepolia-rpc.publicnode.com/
+    Request body: {"method":"eth_call","params":[{"data":"0x4aac84e557f0ef3dd13a7e2e04f45512cf5bb89d6e3700c070ef984d9b30276449ca8c6b","to":"0xE65c0acB049CD1FF44D647188F11414b8E51fefF"},"latest"]}
+    
+    Details: fetch failed
+    Version: viem@2.57.20
+        at Object.request (C:\Users\leoki\Genlayer\authena\node_modules\viem\utils\rpc\http.ts:249:15)
+        at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+        at async fn (C:\Users\leoki\Genlayer\authena\node_modules\viem\clients\transports\http.ts:169:19)
+        at async request (C:\Users\leoki\Genlayer\authena\node_modules\viem\clients\transports\http.ts:175:39)
+        at async withRetry.delay.count.count (C:\Users\leoki\Genlayer\authena\node_modules\viem\utils\buildRequest.ts:164:22)
+        at async attemptRetry (C:\Users\leoki\Genlayer\authena\node_modules\viem\utils\promise\withRetry.ts:67:22) {
+      details: 'fetch failed',
+      docsPath: undefined,
+      metaMessages: [
+        'URL: https://ethereum-sepolia-rpc.publicnode.com/',
+        'Request body: {"method":"eth_call","params":[{"data":"0x4aac84e557f0ef3dd13a7e2e04f45512cf5bb89d6e3700c070ef984d9b30276449ca8c6b","to":"0xE65c0acB049CD1FF44D647188F11414b8E51fefF"},"latest"]}'
+      ],
+      shortMessage: 'HTTP request failed.',
+      version: '2.57.20',
+      body: {
+        method: 'eth_call',
+        params: [
+          {
+            data: '0x4aac84e557f0ef3dd13a7e2e04f45512cf5bb89d6e3700c070ef984d9b30276449ca8c6b',
+            to: '0xE65c0acB049CD1FF44D647188F11414b8E51fefF'
+          },
+          'latest'
+        ]
+      },
+      headers: undefined,
+      status: undefined,
+      url: 'https://ethereum-sepolia-rpc.publicnode.com/',
+      [cause]: [TypeError: fetch failed] {
+        [cause]: Error: getaddrinfo ENOTFOUND ethereum-sepolia-rpc.publicnode.com
+            at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26) {
+          errno: -3008,
+          code: 'ENOTFOUND',
+          syscall: 'getaddrinfo',
+          hostname: 'ethereum-sepolia-rpc.publicnode.com'
+        }
+      }
+    },
+    details: 'fetch failed',
+    docsPath: undefined,
+    metaMessages: [
+      'URL: https://ethereum-sepolia-rpc.publicnode.com/',
+      'Request body: {"method":"eth_call","params":[{"data":"0x4aac84e557f0ef3dd13a7e2e04f45512cf5bb89d6e3700c070ef984d9b30276449ca8c6b","to":"0xE65c0acB049CD1FF44D647188F11414b8E51fefF"},"latest"]}',
+      ' ',
+      'Raw Call Arguments:',
+      '  to:    0xE65c0acB049CD1FF44D647188F11414b8E51fefF\n' +
+        '  data:  0x4aac84e557f0ef3dd13a7e2e04f45512cf5bb89d6e3700c070ef984d9b30276449ca8c6b'
+    ],
+    shortMessage: 'HTTP request failed.',
+    version: '2.57.20'
+  },
+  details: 'fetch failed',
+  docsPath: '/docs/contract/readContract',
+  metaMessages: [
+    'URL: https://ethereum-sepolia-rpc.publicnode.com/',
+    'Request body: {"method":"eth_call","params":[{"data":"0x4aac84e557f0ef3dd13a7e2e04f45512cf5bb89d6e3700c070ef984d9b30276449ca8c6b","to":"0xE65c0acB049CD1FF44D647188F11414b8E51fefF"},"latest"]}',
+    ' ',
+    'Raw Call Arguments:',
+    '  to:    0xE65c0acB049CD1FF44D647188F11414b8E51fefF\n' +
+      '  data:  0x4aac84e557f0ef3dd13a7e2e04f45512cf5bb89d6e3700c070ef984d9b30276449ca8c6b',
+    ' ',
+    'Contract Call:',
+    '  address:   0xE65c0acB049CD1FF44D647188F11414b8E51fefF\n' +
+      '  function:  getItemInfo(bytes32 _itemID)\n' +
+      '  args:                 (0x57f0ef3dd13a7e2e04f45512cf5bb89d6e3700c070ef984d9b30276449ca8c6b)'
+  ],
+  shortMessage: 'HTTP request failed.',
+  version: '2.57.20',
+  abi: [
+    {
+      name: 'NewItem',
+      type: 'event',
+      inputs: [
+        { type: 'bytes32', name: '_itemID', indexed: true },
+        { type: 'string', name: '_data' },
+        { type: 'bool', name: '_addedDirectly' }
+      ]
+    },
+    {
+      name: 'RequestSubmitted',
+      type: 'event',
+      inputs: [
+        { type: 'bytes32', name: '_itemID', indexed: true },
+        { type: 'uint256', name: '_evidenceGroupID' }
+      ]
+    },
+    {
+      name: 'Evidence',
+      type: 'event',
+      inputs: [
+        { type: 'address', name: '_arbitrator', indexed: true },
+        { type: 'uint256', name: '_evidenceGroupID', indexed: true },
+        { type: 'address', name: '_party', indexed: true },
+        { type: 'string', name: '_evidence' }
+      ]
+    },
+    {
+      name: 'Dispute',
+      type: 'event',
+      inputs: [
+        { type: 'address', name: '_arbitrator', indexed: true },
+        { type: 'uint256', name: '_disputeID', indexed: true },
+        { type: 'uint256', name: '_metaEvidenceID' },
+        { type: 'uint256', name: '_evidenceGroupID' }
+      ]
+    },
+    {
+      name: 'ItemStatusChange',
+      type: 'event',
+      inputs: [
+        { type: 'bytes32', name: '_itemID', indexed: true },
+        { type: 'bool', name: '_updatedDirectly' }
+      ]
+    },
+    {
+      name: 'addItem',
+      type: 'function',
+      stateMutability: 'payable',
+      inputs: [ { type: 'string', name: '_item' } ],
+      outputs: []
+    },
+    {
+      name: 'removeItem',
+      type: 'function',
+      stateMutability: 'payable',
+      inputs: [
+        { type: 'bytes32', name: '_itemID' },
+        { type: 'string', name: '_evidence' }
+      ],
+      outputs: []
+    },
+    {
+      name: 'challengeRequest',
+      type: 'function',
+      stateMutability: 'payable',
+      inputs: [
+        { type: 'bytes32', name: '_itemID' },
+        { type: 'string', name: '_evidence' }
+      ],
+      outputs: []
+    },
+    {
+      name: 'executeRequest',
+      type: 'function',
+      stateMutability: 'nonpayable',
+      inputs: [ { type: 'bytes32', name: '_itemID' } ],
+      outputs: []
+    },
+    {
+      name: 'getItemInfo',
+      type: 'function',
+      stateMutability: 'view',
+      inputs: [ { type: 'bytes32', name: '_itemID' } ],
+      outputs: [
+        { type: 'uint8', name: 'status' },
+        { type: 'uint256', name: 'numberOfRequests' },
+        { type: 'uint256', name: 'sumDeposit' }
+      ]
+    },
+    {
+      name: 'arbitratorDisputeIDToItemID',
+      type: 'function',
+      stateMutability: 'view',
+      inputs: [ { type: 'address' }, { type: 'uint256' } ],
+      outputs: [ { type: 'bytes32' } ]
+    },
+    {
+      name: 'arbitrator',
+      type: 'function',
+      stateMutability: 'view',
+      inputs: [],
+      outputs: [ { type: 'address' } ]
+    },
+    {
+      name: 'challengePeriodDuration',
+      type: 'function',
+      stateMutability: 'view',
+      inputs: [],
+      outputs: [ { type: 'uint256' } ]
+    },
+    {
+      name: 'submissionBaseDeposit',
+      type: 'function',
+      stateMutability: 'view',
+      inputs: [],
+      outputs: [ { type: 'uint256' } ]
+    },
+    {
+      name: 'removalBaseDeposit',
+      type: 'function',
+      stateMutability: 'view',
+      inputs: [],
+      outputs: [ { type: 'uint256' } ]
+    },
+    {
+      name: 'submissionChallengeBaseDeposit',
+      type: 'function',
+      stateMutability: 'view',
+      inputs: [],
+      outputs: [ { type: 'uint256' } ]
+    },
+    {
+      name: 'removalChallengeBaseDeposit',
+      type: 'function',
+      stateMutability: 'view',
+      inputs: [],
+      outputs: [ { type: 'uint256' } ]
+    }
+  ],
+  args: [
+    '0x57f0ef3dd13a7e2e04f45512cf5bb89d6e3700c070ef984d9b30276449ca8c6b'
+  ],
+  contractAddress: '0xE65c0acB049CD1FF44D647188F11414b8E51fefF',
+  formattedArgs: undefined,
+  functionName: 'getItemInfo',
+  sender: undefined
+}
+
+Node.js v24.19.0
+C:\Users\leoki\Genlayer\authena\node_modules\viem\utils\errors\getContractError.ts:84
+  return new ContractFunctionExecutionError(cause as BaseError, {
+         ^
+
+ContractFunctionExecutionError: HTTP request failed.
+
+URL: https://ethereum-sepolia-rpc.publicnode.com/
+Request body: {"method":"eth_call","params":[{"data":"0x4aac84e557f0ef3dd13a7e2e04f45512cf5bb89d6e3700c070ef984d9b30276449ca8c6b","to":"0xE65c0acB049CD1FF44D647188F11414b8E51fefF"},"latest"]}
+ 
+Raw Call Arguments:
+  to:    0xE65c0acB049CD1FF44D647188F11414b8E51fefF
+  data:  0x4aac84e557f0ef3dd13a7e2e04f45512cf5bb89d6e3700c070ef984d9b30276449ca8c6b
+ 
+Contract Call:
+  address:   0xE65c0acB049CD1FF44D647188F11414b8E51fefF
+  function:  getItemInfo(bytes32 _itemID)
+  args:                 (0x57f0ef3dd13a7e2e04f45512cf5bb89d6e3700c070ef984d9b30276449ca8c6b)
+
+Docs: https://viem.sh/docs/contract/readContract
+Details: fetch failed
+Version: viem@2.57.20
+    at getContractError (C:\Users\leoki\Genlayer\authena\node_modules\viem\utils\errors\getContractError.ts:84:10)
+    at readContract (C:\Users\leoki\Genlayer\authena\node_modules\viem\actions\public\readContract.ts:140:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async status (C:\Users\leoki\Genlayer\authena\scripts\curate-lib.ts:54:18)
+    at async <anonymous> (C:\Users\leoki\Genlayer\authena\scripts\live-demo.ts:95:8) {
+  cause: CallExecutionError: HTTP request failed.
+  
+  URL: https://ethereum-sepolia-rpc.publicnode.com/
+  Request body: {"method":"eth_call","params":[{"data":"0x4aac84e557f0ef3dd13a7e2e04f45512cf5bb89d6e3700c070ef984d9b30276449ca8c6b","to":"0xE65c0acB049CD1FF44D647188F11414b8E51fefF"},"latest"]}
+   
+  Raw Call Arguments:
+    to:    0xE65c0acB049CD1FF44D647188F11414b8E51fefF
+    data:  0x4aac84e557f0ef3dd13a7e2e04f45512cf5bb89d6e3700c070ef984d9b30276449ca8c6b
+  
+  Details: fetch failed
+  Version: viem@2.57.20
+      at getCallError (C:\Users\leoki\Genlayer\authena\node_modules\viem\utils\errors\getCallError.ts:42:10)
+      at call (C:\Users\leoki\Genlayer\authena\node_modules\viem\_esm\actions\public\call.js:182:15)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async readContract (C:\Users\leoki\Genlayer\authena\node_modules\viem\actions\public\readContract.ts:124:22)
+      at async status (C:\Users\leoki\Genlayer\authena\scripts\curate-lib.ts:54:18)
+      at async <anonymous> (C:\Users\leoki\Genlayer\authena\scripts\live-demo.ts:95:8) {
+    cause: HttpRequestError: HTTP request failed.
+    
+    URL: https://ethereum-sepolia-rpc.publicnode.com/
+    Request body: {"method":"eth_call","params":[{"data":"0x4aac84e557f0ef3dd13a7e2e04f45512cf5bb89d6e3700c070ef984d9b30276449ca8c6b","to":"0xE65c0acB049CD1FF44D647188F11414b8E51fefF"},"latest"]}
+    
+    Details: fetch failed
+    Version: viem@2.57.20
+        at Object.request (C:\Users\leoki\Genlayer\authena\node_modules\viem\utils\rpc\http.ts:249:15)
+        at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+        at async fn (C:\Users\leoki\Genlayer\authena\node_modules\viem\clients\transports\http.ts:169:19)
+        at async request (C:\Users\leoki\Genlayer\authena\node_modules\viem\clients\transports\http.ts:175:39)
+        at async withRetry.delay.count.count (C:\Users\leoki\Genlayer\authena\node_modules\viem\utils\buildRequest.ts:164:22)
+        at async attemptRetry (C:\Users\leoki\Genlayer\authena\node_modules\viem\utils\promise\withRetry.ts:67:22) {
+      details: 'fetch failed',
+      docsPath: undefined,
+      metaMessages: [
+        'URL: https://ethereum-sepolia-rpc.publicnode.com/',
+        'Request body: {"method":"eth_call","params":[{"data":"0x4aac84e557f0ef3dd13a7e2e04f45512cf5bb89d6e3700c070ef984d9b30276449ca8c6b","to":"0xE65c0acB049CD1FF44D647188F11414b8E51fefF"},"latest"]}'
+      ],
+      shortMessage: 'HTTP request failed.',
+      version: '2.57.20',
+      body: {
+        method: 'eth_call',
+        params: [
+          {
+            data: '0x4aac84e557f0ef3dd13a7e2e04f45512cf5bb89d6e3700c070ef984d9b30276449ca8c6b',
+            to: '0xE65c0acB049CD1FF44D647188F11414b8E51fefF'
+          },
+          'latest'
+        ]
+      },
+      headers: undefined,
+      status: undefined,
+      url: 'https://ethereum-sepolia-rpc.publicnode.com/',
+      [cause]: [TypeError: fetch failed] {
+        [cause]: Error: getaddrinfo ENOTFOUND ethereum-sepolia-rpc.publicnode.com
+            at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26) {
+          errno: -3008,
+          code: 'ENOTFOUND',
+          syscall: 'getaddrinfo',
+          hostname: 'ethereum-sepolia-rpc.publicnode.com'
+        }
+      }
+    },
+    details: 'fetch failed',
+    docsPath: undefined,
+    metaMessages: [
+      'URL: https://ethereum-sepolia-rpc.publicnode.com/',
+      'Request body: {"method":"eth_call","params":[{"data":"0x4aac84e557f0ef3dd13a7e2e04f45512cf5bb89d6e3700c070ef984d9b30276449ca8c6b","to":"0xE65c0acB049CD1FF44D647188F11414b8E51fefF"},"latest"]}',
+      ' ',
+      'Raw Call Arguments:',
+      '  to:    0xE65c0acB049CD1FF44D647188F11414b8E51fefF\n' +
+        '  data:  0x4aac84e557f0ef3dd13a7e2e04f45512cf5bb89d6e3700c070ef984d9b30276449ca8c6b'
+    ],
+    shortMessage: 'HTTP request failed.',
+    version: '2.57.20'
+  },
+  details: 'fetch failed',
+  docsPath: '/docs/contract/readContract',
+  metaMessages: [
+    'URL: https://ethereum-sepolia-rpc.publicnode.com/',
+    'Request body: {"method":"eth_call","params":[{"data":"0x4aac84e557f0ef3dd13a7e2e04f45512cf5bb89d6e3700c070ef984d9b30276449ca8c6b","to":"0xE65c0acB049CD1FF44D647188F11414b8E51fefF"},"latest"]}',
+    ' ',
+    'Raw Call Arguments:',
+    '  to:    0xE65c0acB049CD1FF44D647188F11414b8E51fefF\n' +
+      '  data:  0x4aac84e557f0ef3dd13a7e2e04f45512cf5bb89d6e3700c070ef984d9b30276449ca8c6b',
+    ' ',
+    'Contract Call:',
+    '  address:   0xE65c0acB049CD1FF44D647188F11414b8E51fefF\n' +
+      '  function:  getItemInfo(bytes32 _itemID)\n' +
+      '  args:                 (0x57f0ef3dd13a7e2e04f45512cf5bb89d6e3700c070ef984d9b30276449ca8c6b)'
+  ],
+  shortMessage: 'HTTP request failed.',
+  version: '2.57.20',
+  abi: [
+    {
+      name: 'NewItem',
+      type: 'event',
+      inputs: [
+        { type: 'bytes32', name: '_itemID', indexed: true },
+        { type: 'string', name: '_data' },
+        { type: 'bool', name: '_addedDirectly' }
+      ]
+    },
+    {
+      name: 'RequestSubmitted',
+      type: 'event',
+      inputs: [
+        { type: 'bytes32', name: '_itemID', indexed: true },
+        { type: 'uint256', name: '_evidenceGroupID' }
+      ]
+    },
+    {
+      name: 'Evidence',
+      type: 'event',
+      inputs: [
+        { type: 'address', name: '_arbitrator', indexed: true },
+        { type: 'uint256', name: '_evidenceGroupID', indexed: true },
+        { type: 'address', name: '_party', indexed: true },
+        { type: 'string', name: '_evidence' }
+      ]
+    },
+    {
+      name: 'Dispute',
+      type: 'event',
+      inputs: [
+        { type: 'address', name: '_arbitrator', indexed: true },
+        { type: 'uint256', name: '_disputeID', indexed: true },
+        { type: 'uint256', name: '_metaEvidenceID' },
+        { type: 'uint256', name: '_evidenceGroupID' }
+      ]
+    },
+    {
+      name: 'ItemStatusChange',
+      type: 'event',
+      inputs: [
+        { type: 'bytes32', name: '_itemID', indexed: true },
+        { type: 'bool', name: '_updatedDirectly' }
+      ]
+    },
+    {
+      name: 'addItem',
+      type: 'function',
+      stateMutability: 'payable',
+      inputs: [ { type: 'string', name: '_item' } ],
+      outputs: []
+    },
+    {
+      name: 'removeItem',
+      type: 'function',
+      stateMutability: 'payable',
+      inputs: [
+        { type: 'bytes32', name: '_itemID' },
+        { type: 'string', name: '_evidence' }
+      ],
+      outputs: []
+    },
+    {
+      name: 'challengeRequest',
+      type: 'function',
+      stateMutability: 'payable',
+      inputs: [
+        { type: 'bytes32', name: '_itemID' },
+        { type: 'string', name: '_evidence' }
+      ],
+      outputs: []
+    },
+    {
+      name: 'executeRequest',
+      type: 'function',
+      stateMutability: 'nonpayable',
+      inputs: [ { type: 'bytes32', name: '_itemID' } ],
+      outputs: []
+    },
+    {
+      name: 'getItemInfo',
+      type: 'function',
+      stateMutability: 'view',
+      inputs: [ { type: 'bytes32', name: '_itemID' } ],
+      outputs: [
+        { type: 'uint8', name: 'status' },
+        { type: 'uint256', name: 'numberOfRequests' },
+        { type: 'uint256', name: 'sumDeposit' }
+      ]
+    },
+    {
+      name: 'arbitratorDisputeIDToItemID',
+      type: 'function',
+      stateMutability: 'view',
+      inputs: [ { type: 'address' }, { type: 'uint256' } ],
+      outputs: [ { type: 'bytes32' } ]
+    },
+    {
+      name: 'arbitrator',
+      type: 'function',
+      stateMutability: 'view',
+      inputs: [],
+      outputs: [ { type: 'address' } ]
+    },
+    {
+      name: 'challengePeriodDuration',
+      type: 'function',
+      stateMutability: 'view',
+      inputs: [],
+      outputs: [ { type: 'uint256' } ]
+    },
+    {
+      name: 'submissionBaseDeposit',
+      type: 'function',
+      stateMutability: 'view',
+      inputs: [],
+      outputs: [ { type: 'uint256' } ]
+    },
+    {
+      name: 'removalBaseDeposit',
+      type: 'function',
+      stateMutability: 'view',
+      inputs: [],
+      outputs: [ { type: 'uint256' } ]
+    },
+    {
+      name: 'submissionChallengeBaseDeposit',
+      type: 'function',
+      stateMutability: 'view',
+      inputs: [],
+      outputs: [ { type: 'uint256' } ]
+    },
+    {
+      name: 'removalChallengeBaseDeposit',
+      type: 'function',
+      stateMutability: 'view',
+      inputs: [],
+      outputs: [ { type: 'uint256' } ]
+    }
+  ],
+  args: [
+    '0x57f0ef3dd13a7e2e04f45512cf5bb89d6e3700c070ef984d9b30276449ca8c6b'
+  ],
+  contractAddress: '0xE65c0acB049CD1FF44D647188F11414b8E51fefF',
+  formattedArgs: undefined,
+  functionName: 'getItemInfo',
+  sender: undefined
+}
+
+Node.js v24.19.0
+waiting 9 min for the ruling deadline…
+✓ weather-lookup/refuse {"tx":"0xa518b4cc0006271e5edbb5b18c212be92e2c13805e5b1d066c57a5ebe179c7be"}
+┌────────────────────────┬──────────────────────────┬──────────────────────┐
+│ (index)                │ status                   │ finding              │
+├────────────────────────┼──────────────────────────┼──────────────────────┤
+│ kleros-curate          │ 'registered'             │ null                 │
+│ poisoned-uploader      │ 'absent'                 │ 'MALICIOUS'          │
+│ file-uploader          │ 'registered'             │ 'BENIGN'             │
+│ honest-cli-installer   │ 'registration requested' │ null                 │
+│ honest-payments        │ 'registration requested' │ null                 │
+│ honest-security-notes  │ 'registered'             │ 'BENIGN'             │
+│ sneaky-transcript-leak │ 'absent'                 │ 'MALICIOUS'          │
+│ sneaky-token-approval  │ 'absent'                 │ 'MALICIOUS'          │
+│ sneaky-remote-loader   │ 'absent'                 │ 'MALICIOUS'          │
+│ markdown-tidy          │ 'registered'             │ 'QUOTE_NOT_IN_FILE'  │
+│ not-pinned             │ 'absent'                 │ 'LISTING_NOT_PINNED' │
+│ weather-lookup         │ 'absent'                 │ null                 │
+│ pdf-summarizer         │ 'removal requested'      │ null                 │
+└────────────────────────┴──────────────────────────┴──────────────────────┘
+✓ honest-cli-installer/relay {"disputeId":3,"itemId":"0xc106f5050cc95255fe13b849539ee20b6117afb5b3a2ccc197747a38f16102c5","listTx":"0xbd42b083c74595d730c3ef7bcb5d147b3d6e4a887213490bcc77d0a955f8cd9a","disputeTx":"0x89e724a8e8fe16
+✓ honest-payments/relay {"disputeId":4,"itemId":"0x57f0ef3dd13a7e2e04f45512cf5bb89d6e3700c070ef984d9b30276449ca8c6b","listTx":"0x610b0fcf801403e170b489d636b87d042b2c28b43c6443c8e16c73d7e8ae6ddb","disputeTx":"0x434507993ba6a7
+✓ pdf-summarizer/removal-relay {"disputeId":12,"itemId":"0x4c6aa6a14303febd126b8b5888622929cbb3b355c4a5964a1e9e673611db5860","listTx":"0xaf5fdbe46c05c7bc1ddb18f2078a41fc4c8ac9f5a3a1c9207e95297773da0eaf","disputeTx":"0x2e96675cf8d8e
+✓ honest-payments/removal-request {"tx":"0xcf3efadf358c075bc082794556a873646b5e72dd0dc8d2b2a57c51b7b99f15aa"}
+✓ honest-payments/removal-challenge {"tx":"0xdf3daf02f4624372e0f268f35e496998d4caf75e8aa4c98b1f2e3df01e3198b7","disputeId":13}
+✓ honest-payments/removal-relay {"disputeId":13,"itemId":"0x57f0ef3dd13a7e2e04f45512cf5bb89d6e3700c070ef984d9b30276449ca8c6b","listTx":"0x610b0fcf801403e170b489d636b87d042b2c28b43c6443c8e16c73d7e8ae6ddb","disputeTx":"0xdf3daf02f4624
+┌────────────────────────┬──────────────┬──────────────────────┐
+│ (index)                │ status       │ finding              │
+├────────────────────────┼──────────────┼──────────────────────┤
+│ kleros-curate          │ 'registered' │ null                 │
+│ poisoned-uploader      │ 'absent'     │ 'MALICIOUS'          │
+│ file-uploader          │ 'registered' │ 'BENIGN'             │
+│ honest-cli-installer   │ 'registered' │ 'BENIGN'             │
+│ honest-payments        │ 'registered' │ 'BENIGN'             │
+│ honest-security-notes  │ 'registered' │ 'BENIGN'             │
+│ sneaky-transcript-leak │ 'absent'     │ 'MALICIOUS'          │
+│ sneaky-token-approval  │ 'absent'     │ 'MALICIOUS'          │
+│ sneaky-remote-loader   │ 'absent'     │ 'MALICIOUS'          │
+│ markdown-tidy          │ 'registered' │ 'QUOTE_NOT_IN_FILE'  │
+│ not-pinned             │ 'absent'     │ 'LISTING_NOT_PINNED' │
+│ weather-lookup         │ 'absent'     │ null                 │
+│ pdf-summarizer         │ 'absent'     │ 'MALICIOUS'          │
+└────────────────────────┴──────────────┴──────────────────────┘

@@ -9,7 +9,7 @@ export const FACTORY = "0x3FB8314C628E9afE7677946D3E23443Ce748Ac17" as const; //
 export const DEPLOYMENT = "deployments/sepolia.json";
 export const WALLETS = "data/demo-wallets.json"; // gitignored
 
-export const pub = createPublicClient({ chain: sepolia, transport: http(RPC) });
+export const pub = createPublicClient({ chain: sepolia, transport: http(RPC, { retryCount: 8, retryDelay: 2000, timeout: 30_000 }) });
 
 /** The deployer and relayer key comes from the environment and is never printed. */
 export function signerKey(): Hex {
@@ -19,7 +19,7 @@ export function signerKey(): Hex {
 }
 
 export function wallet(key: Hex) {
-  return createWalletClient({ account: privateKeyToAccount(key), chain: sepolia, transport: http(RPC) });
+  return createWalletClient({ account: privateKeyToAccount(key), chain: sepolia, transport: http(RPC, { retryCount: 8, retryDelay: 2000, timeout: 30_000 }) });
 }
 
 /** A demo role's wallet (publisher or hunter), created by scripts/demo-wallets.ts. */

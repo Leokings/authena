@@ -68,7 +68,7 @@ await step("guard/quote-tx-mismatch", async () => genlayerWrite("EXPECTED-quote-
 await step("guard/dispute-not-found", async () => genlayerWrite("EXPECTED-dispute-not-found", "judge", [999999, S[`${idle.id}/list`].tx, idleDispute.tx, idleDispute.tx]));
 
 // 4. Relay every challenged listing: GenLayer judges, the adapter passes the ruling to Curate.
-for (const c of of("challenge")) await step(`${c.id}/relay`, () => relay(S[`${c.id}/challenge`].tx as Hex, c.id));
+for (const c of of("challenge")) await step(`${c.id}/relay`, () => relay(S[`${c.id}/challenge`].tx as Hex, c.id, S[`${c.id}/relay-attempt`]?.judge));
 
 // 5. A dispute cannot be judged twice.
 const first = S[`${of("challenge")[0].id}/relay`];
@@ -87,7 +87,7 @@ for (const c of [...of("unchallenged"), ...of("caught-later")]) {
 for (const c of of("caught-later")) {
   await step(`${c.id}/removal-request`, () => requestRemoval(hunter, S[`${c.id}/list`].itemId, evidenceUri(c)));
   await step(`${c.id}/removal-challenge`, () => challenge(publisher, S[`${c.id}/list`].itemId, ""));
-  await step(`${c.id}/removal-relay`, () => relay(S[`${c.id}/removal-challenge`].tx as Hex, `${c.id}-removal`));
+  await step(`${c.id}/removal-relay`, () => relay(S[`${c.id}/removal-challenge`].tx as Hex, `${c.id}-removal`, S[`${c.id}/removal-relay-attempt`]?.judge));
 }
 
 // 8. A removal request against a clean, listed skill fails.

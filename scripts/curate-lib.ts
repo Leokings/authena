@@ -124,14 +124,32 @@ export function genlayerWrite(label: string, method: string, args: (string | num
  * The relay adds nothing of its own: every input is re-read from Sepolia by the validators, and
  * the ruling it submits is the one stored on GenLayer, with that transaction's hash.
  */
-export async function relay(disputeTx: Hex, label: string) {
+/** Re-reads a GenLayer transaction's receipt (saved for the manifest) and summarises it. */
+export function genlayerReceipt(label: string, tx: string) {
+  const out = execFileSync("bash", ["-c", `genlayer receipt ${tx} --status FINALIZED --retries 60 --interval 5000 > deployments/studionet/receipts/${label}.receipt.txt 2>&1; cat deployments/studionet/receipts/${label}.receipt.txt`], { encoding: "utf8" });
+  return {
+    label,
+    tx,
+    status: out.match(/status_name: '([A-Z_]+)'/g)?.at(-1)?.match(/'([A-Z_]+)'/)?.[1] ?? "",
+    leader: out.match(/execution_result: '([A-Z]+)'/)?.[1] ?? "",
+    agree: (out.match(/'0x[0-9A-Fa-f]{40}': 'agree'/g) ?? []).length,
+    disagree: (out.match(/'0x[0-9A-Fa-f]{40}': 'disagree'/g) ?? []).length,
+    error: out.match(/\[(?:EXPECTED|EXTERNAL|TRANSIENT|LLM_ERROR)\] [a-z0-9_]+/)?.[0] ?? "",
+  };
+}
+
+export async function relay(disputeTx: Hex, label: string, known?: { tx?: string }) {
   const { arbitrator } = deployment();
   const inputs = await disputeInputs(disputeTx);
   let v = await verdict(inputs.disputeId);
   let judge: ReturnType<typeof genlayerWrite> | undefined;
+  // Judged in an earlier attempt whose receipt timed out: keep that transaction.
+  if (v.judged && known?.tx) judge = genlayerReceipt(label, known.tx);
   if (!v.judged) {
     judge = genlayerWrite(label, "judge", [inputs.disputeId, inputs.listTx, inputs.disputeTx, inputs.quoteTx]);
-    if (judge.status !== "FINALIZED" || judge.leader !== "SUCCESS") return { ...inputs, judge, relayed: false as const };
+    // Not finalized yet (StudioNet can be slow): fail, so a resumed run asks again instead of
+    // recording a dispute that was never ruled on.
+    if (judge.status !== "FINALIZED" || judge.leader !== "SUCCESS") throw new Error(`judge ${judge.tx ?? "?"} for dispute ${inputs.disputeId} is not finalized yet (${judge.status || "no receipt"})`);
     v = await verdict(inputs.disputeId);
   }
   const arb = artifact("GenLayerArbitrator");

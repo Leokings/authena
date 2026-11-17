@@ -1,0 +1,39 @@
+{
+  "01-hook": {
+    "file": "audio/vo-01-hook.mp3",
+    "seconds": 2.821224
+  },
+  "02-threat": {
+    "file": "audio/vo-02-threat.mp3",
+    "seconds": 2.76898
+  },
+  "03-list": {
+    "file": "audio/vo-03-list.mp3",
+    "seconds": 6.582857
+  },
+  "04-judge": {
+    "file": "audio/vo-04-judge.mp3",
+    "seconds": 5.668571
+  },
+  "05-live": {
+    "file": "audio/vo-05-live.mp3",
+    "seconds": 6.086531
+  },
+  "06-product": {
+    "file": "audio/vo-06-product.mp3",
+    "seconds": 3.526531
+  },
+  "07-cta": {
+    "file": "audio/vo-07-cta.mp3",
+    "seconds": 3.004082
+  },
+  "_texts": {
+    "01-hook": "Your agent obeys every skill it installs.",
+    "02-threat": "So one hidden line can make it leak your keys.",
+    "03-list": "Authena is a list on Kleros Curate. Publishers stake that a skill is clean. Anyone can challenge it.",
+    "04-judge": "GenLayer validators read the file, check the quote, and rule. Kleros pays the winner.",
+    "05-live": "Thirteen skills went through it live. The sneaky ones got busted. The honest ones stayed listed.",
+    "06-product": "Paste any skill link, or let your agent check first.",
+    "07-cta": "Authena. Check the skill before your agent does."
+  }
+}
