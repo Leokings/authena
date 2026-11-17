@@ -228,7 +228,7 @@ function JudgeScene() {
         <Hi bg={C.lilac}>GenLayer</Hi> validators judge. Kleros pays.
       </Caption>
       <div style={{ opacity: 1 - swap }}>
-        <Shot src="curate-item" url="curate.kleros.io · the poisoned uploader" frames={[10, 100]} from={[310, 170, 1.38]} to={[330, 200, 1.45]} style={{ left: 150, top: 170, width: 1120, height: 840 }} />
+        <Shot src="curate-item" url="curate.kleros.io · the poisoned uploader" frames={[10, 100]} from={[310, 160, 1.32]} to={[300, 575, 1.3]} style={{ left: 150, top: 170, width: 1120, height: 840 }} />
       </div>
       <div style={{ opacity: swap }}>
         <Shot src="genlayer-tx-result" url="explorer-studio.genlayer.com/tx/0x…" frames={[110, 230]} from={[200, 190, 1.35]} to={[200, 230, 1.6]} style={{ left: 150, top: 170, width: 1120, height: 840 }} />
