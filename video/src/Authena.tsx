@@ -204,7 +204,7 @@ function ListScene() {
       <Caption top={44} size={62}>
         A list on <Hi bg={C.lilac}>Kleros Curate</Hi>. Stake it. Or challenge it.
       </Caption>
-      <Shot src="curate-list" url="curate.kleros.io/tcr/11155111/0xE65c…fefF" frames={[20, 220]} from={[300, 0, 1.0]} to={[520, 330, 1.45]} style={{ left: 170, top: 165, width: 1580, height: 860 }} />
+      <Shot src="curate-list" url="curate.kleros.io/tcr/11155111/0xBe86…7CF1" frames={[20, 220]} from={[300, 0, 1.0]} to={[520, 330, 1.45]} style={{ left: 170, top: 165, width: 1580, height: 860 }} />
       <Stamp at={120} color={C.mintD} x={1340} y={250} size={44} rotate={6}>
         STAKED ✓
       </Stamp>

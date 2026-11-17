@@ -1,0 +1,275 @@
+- Setting up the deployment environment...
+[genlayer-js] initializeConsensusSmartContract() is deprecated and will be removed in a future release. The consensus contract is now resolved from the static chain definition.
+
+Deployment Parameters:
+{
+  code: '# { "Depends": "py-genlayer:1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6" }\n' +
+    '"""Authena: the judge behind a Kleros Curate list of agent skills that are safe to install.\n' +
+    '\n' +
+    'A publisher lists a skill at one exact commit on a Curate list (Sepolia) and locks a deposit. A\n' +
+    'hunter challenges by quoting a passage and locking a deposit. This contract reads the listing and\n' +
+    'the quote from Sepolia, fetches the file from GitHub at that commit, checks the quote is really in\n' +
+    'it, and has validators answer one question about that passage. Ordinary code turns the answer into\n' +
+    'the Curate ruling, so the model never touches the money.\n' +
+    '\n' +
+    'A listing and a challenge can be written straight into the Curate transaction, or stored as files\n' +
+    "on IPFS in Curate's own format (so the list also shows on Kleros's website). Both are accepted.\n" +
+    '"""\n' +
+    '\n' +
+    'import hashlib\n' +
+    'import json\n' +
+    'import re\n' +
+    'from typing import Any, NoReturn\n' +
+    '\n' +
+    'from genlayer import *\n' +
+    '\n' +
+    'SEPOLIA_RPC = "https://ethereum-sepolia-rpc.publicnode.com"\n' +
+    'RAW_BASE = "https://raw.githubusercontent.com"\n' +
+    'ENTRY_FILE = "SKILL.md"\n' +
+    `IPFS_GATEWAY = "https://cdn.kleros.link"  # Kleros's own gateway, the one its Curate website reads\n` +
+    '\n' +
+    '# Kleros LightGeneralizedTCR event signatures (keccak256 of the declaration).\n' +
+    'TOPIC_NEW_ITEM = "0x93e4d3e9542ddd9eea8962241d920b12b96bce26749667189fd06ed3549019e1"  # NewItem(bytes32,string,bool)\n' +
+    'TOPIC_REQUEST = "0x73057048557c37c893f346985dc1d461cf12b00f09397bb275613203124c2be1"  # RequestSubmitted(bytes32,uint256)\n' +
+    'TOPIC_EVIDENCE = "0xdccf2f8b2cc26eafcd61905cba744cff4b81d14740725f6376390dc6298a6a3c"  # Evidence(address,uint256,address,string)\n' +
+    'TOPIC_DISPUTE = "0x74baab670a4015ab2f1b467c5252a96141a2573f2908e58a92081e80d3cfde3d"  # Dispute(address,uint256,uint256,uint256)\n' +
+    'SEL_DISPUTE_ITEM = "9c81a827"  # arbitratorDisputeIDToItemID(address,uint256)\n' +
+    '\n' +
+    'MAX_RESPONSE_BYTES = 400_000\n' +
+    'MAX_FILE_BYTES = 100_000\n' +
+    'MAX_IPFS_BYTES = 20_000\n' +
+    'MAX_LISTING_CHARS = 600\n' +
+    'MAX_ACCUSATION_CHARS = 2_000\n' +
+    'MIN_QUOTE_CHARS = 20\n' +
+    'MAX_QUOTE_CHARS = 600\n' +
+    'MAX_PURPOSE_CHARS = 600\n' +
+    'CONTEXT_CHARS = 1_500  # shown to validators on each side of the quote\n' +
+    'MAX_DISPUTE_ID = 10**12\n' +
+    'MAX_DISPUTES_PER_SKILL = 20\n' +
+    '\n' +
+    'REQUEST_TYPES = ("registration", "removal")\n' +
+    'VERDICTS = ("MALICIOUS", "BENIGN", "UNCLEAR")\n' +
+    '# Findings that code reaches alone, without asking validators.\n' +
+    'LISTING_LOSES = ("MALICIOUS", "LISTING_NOT_PINNED", "LISTING_MISSING")\n' +
+    'ACCUSER_LOSES = ("BENIGN", "QUOTE_NOT_IN_FILE", "ACCUSATION_INVALID")\n' +
+    'NO_RULING = ("UNCLEAR", "FILE_TOO_LARGE")\n' +
+    '# Curate rulings: 0 refuse to rule, 1 the requester wins, 2 the challenger wins.\n' +
+    'RULING_NONE, RULING_REQUESTER, RULING_CHALLENGER = 0, 1, 2\n' +
+    '\n' +
+    'RE_REPO = re.compile(r"^[A-Za-z0-9_.-]{1,100}/[A-Za-z0-9_.-]{1,100}$")\n' +
+    'RE_COMMIT = re.compile(r"^[0-9a-f]{40}$")\n' +
+    'RE_PATH = re.compile(r"^[A-Za-z0-9_.\\-/]{0,200}$")\n' +
+    'RE_IPFS = re.compile(r"^/ipfs/Qm[1-9A-HJ-NP-Za-km-z]{44}$")  # a version-0 content address, no sub-path\n' +
+    'BASE58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"\n' +
+    '\n' +
+    '\n' +
+    'def _fail(code: str) -> NoReturn:\n' +
+    '    raise gl.vm.UserError(f"[EXPECTED] {code}")\n' +
+    '\n' +
+    '\n' +
+    'def _external(code: str) -> NoReturn:\n' +
+    '    raise gl.vm.UserError(f"[EXTERNAL] {code}")\n' +
+    '\n' +
+    '\n' +
+    'def _transient(code: str) -> NoReturn:\n' +
+    '    raise gl.vm.UserError(f"[TRANSIENT] {code}")\n' +
+    '\n' +
+    '\n' +
+    'def _is_hex(value: Any, length: int) -> bool:\n' +
+    '    if not isinstance(value, str) or len(value) != length + 2 or not value.startswith("0x"):\n' +
+    '        return False\n' +
+    '    try:\n' +
+    '        int(value[2:], 16)\n' +
+    '        return True\n' +
+    '    except ValueError:\n' +
+    '        return False\n' +
+    '\n' +
+    '\n' +
+    'def _addr(value: Any) -> str:\n' +
+    '    # Clients such as the GenLayer CLI encode 0x-strings as the calldata Address type.\n' +
+    '    if isinstance(value, Address):\n' +
+    '        value = value.as_hex\n' +
+    '    if not _is_hex(value, 40) or int(value[2:], 16) == 0:\n' +
+    '        _fail("invalid_address")\n' +
+    '    return value.lower()\n' +
+    '\n' +
+    '\n' +
+    'def _tx_hash(value: Any) -> str:\n' +
+    '    # Clients differ: the GenLayer CLI turns a 0x-prefixed hash into an integer, others send bytes.\n' +
+    '    if isinstance(value, (bytes, bytearray)) and len(value) == 32:\n' +
+    '        value = "0x" + bytes(value).hex()\n' +
+    '    elif isinstance(value, int) and not isinstance(value, bool) and 0 < value < 1 << 256:\n' +
+    '        value = "0x" + format(value, "064x")\n' +
+    '    if not _is_hex(value, 64):\n' +
+    '        _fail("invalid_tx_hash")\n' +
+    '    return value.lower()\n' +
+    '\n' +
+    '\n' +
+    'def _word(value: int) -> str:\n' +
+    '    return format(value, "064x")\n' +
+    '\n' +
+    '\n' +
+    'def _dec_string(data: bytes, head: int) -> str | None:\n' +
+    '    """Decodes an ABI string whose offset sits in the 32-byte word at `head`."""\n' +
+    '    if len(data) < head + 32:\n' +
+    '        return None\n' +
+    '    offset = int.from_bytes(data[head : head + 32], "big")\n' +
+    '    if offset + 32 > len(data):\n' +
+    '        return None\n' +
+    '    length = int.from_bytes(data[offset : offset + 32], "big")\n' +
+    '    raw = data[offset + 32 : offset + 32 + length]\n' +
+    '    if len(raw) != length:\n' +
+    '        return None\n' +
+    '    try:\n' +
+    '        return raw.decode("utf-8")\n' +
+    '    except UnicodeDecodeError:\n' +
+    '        return None\n' +
+    '\n' +
+    '\n' +
+    '# --- Reading Sepolia --------------------------------------------------------------------\n' +
+    '\n' +
+    '\n' +
+    'def _rpc_post(payload: list[dict[str, Any]]) -> dict[int, dict[str, Any]]:\n' +
+    '    """Sends one JSON-RPC batch and returns the responses by id. Fails closed on anything odd."""\n' +
+    '    res = gl.nondet.web.post(SEPOLIA_RPC, body=json.dumps(payload), headers={"Content-Type": "application/json"})\n' +
+    '    if res.status >= 500 or res.status == 429:\n' +
+    '        _transient(f"rpc_status_{res.status}")\n' +
+    '    if res.status != 200:\n' +
+    '        _external(f"rpc_status_{res.status}")\n' +
+    '    body = res.body or b""\n' +
+    '    if len(body) > MAX_RESPONSE_BYTES:\n' +
+    '        _external("rpc_response_too_large")\n' +
+    '    try:\n' +
+    '        items = json.loads(body.decode("utf-8"))\n' +
+    '    except Exception:\n' +
+    '        _external("rpc_bad_response")\n' +
+    '    if not isinstance(items, list):\n' +
+    '        _external("rpc_bad_response")\n' +
+    '    by_id = {it.get("id"): it for it in items if isinstance(it, dict)}\n' +
+    '    for item in payload:\n' +
+    '        got = by_id.get(item["id"])\n' +
+    '        if got is None:\n' +
+    '            _transient("rpc_missing_result")\n' +
+    '        if got.get("error") is not None:\n' +
+    '            # A node that refuses or rate-limits a call says nothing about the chain.\n' +
+    '            _transient("rpc_call_error")\n' +
+    '    return by_id\n' +
+    '\n' +
+    '\n' +
+    'def _logs(receipt: Any, emitter: str, topic0: str) -> list[dict[str, Any]]:\n' +
+    '    """Logs of one successful transaction emitted by `emitter` with the given event signature."""\n' +
+    '    if receipt is None:\n' +
+    '        _fail("tx_not_found")\n' +
+    '    if not isinstance(receipt, dict):\n' +
+    '        _external("rpc_bad_response")\n' +
+    '    if receipt.get("status") != "0x1":\n' +
+    '        _fail("tx_failed")\n' +
+    '    out = []\n' +
+    '    for log in receipt.get("logs") or []:\n' +
+    '        if not isinstance(log, dict):\n' +
+    '            continue\n' +
+    '        topics = log.get("topics")\n' +
+    '        if str(log.get("address", "")).lower() != emitter or not isinstance(topics, list) or not topics:\n' +
+    '            continue\n' +
+    '        if str(topics[0]).lower() != topic0:\n' +
+    '            continue\n' +
+    '        data = str(log.get("data") or "0x")\n' +
+    '        try:\n' +
+    '            raw = bytes.fromhex(data[2:])\n' +
+    '        except ValueError:\n' +
+    '            _external("rpc_bad_response")\n' +
+    '        out.append({"topics": [str(t).lower() for t in topics], "data": raw})\n' +
+    '    return out\n' +
+    '\n' +
+    '\n' +
+    'def _read_chain(registry: str, arbitrator: str, dispute_id: int, list_tx: str, dispute_tx: str, quote_tx: str) -> dict[str, Any]:\n' +
+    `    """The listing, the accusation and the request type, taken from Curate's own logs."""\n` +
+    '    hashes = []\n' +
+    '    for h in (list_tx, dispute_tx, quote_tx):\n' +
+    '        if h not in hashes:\n' +
+    '            hashes.append(h)\n' +
+    '    payload: list[dict[str, Any]] = [\n' +
+    '        {"jsonrpc": "2.0", "id": i + 1, "method": "eth_getTransactionReceipt", "params": [h]} for i, h in enumerate(hashes)\n' +
+    '    ]\n' +
+    '    call_id = len(hashes) + 1\n' +
+    '    lookup = "0x" + SEL_DISPUTE_ITEM + "0" * 24 + arbitrator[2:] + _word(dispute_id)\n' +
+    '    payload.append({"jsonrpc": "2.0", "id": call_id, "method": "eth_call", "params": [{"to": registry, "data": lookup}, "latest"]})\n' +
+    '    by_id = _rpc_post(payload)\n' +
+    '    receipts = {h: by_id[i + 1].get("result") for i, h in enumerate(hashes)}\n' +
+    '\n' +
+    '    # Which listing does Curate say this dispute is about?\n' +
+    '    item_id = str(by_id[call_id].get("result") or "").lower()\n' +
+    '    if not _is_hex(item_id, 64):\n' +
+    '        _external("rpc_bad_response")\n' +
+    '    if int(item_id[2:], 16) == 0:\n' +
+    '        _fail("dispute_not_found")\n' +
+    '\n' +
+    '    listing = None\n' +
+    '    for log in _logs(receipts[list_tx], registry, TOPIC_NEW_ITEM):\n' +
+    '        if len(log["topics"]) >= 2 and log["topics"][1] == item_id:\n' +
+    '            listing = _dec_string(log["data"], 0)\n' +
+    '            break\n' +
+    '    else:\n' +
+    '        _fail("listing_not_in_tx")\n' +
+    '\n' +
+    '    group = request_type = None\n' +
+    '    arb_topic = "0x" + "0" * 24 + arbitrator[2:]\n' +
+    '    for log in _logs(receipts[dispute_tx], registry, TOPIC_DISPUTE):\n' +
+    '        t = log["topics"]\n' +
+    '        if len(t) >= 3 and t[1] == arb_topic and int(t[2], 16) == dispute_id and len(log["data"]) >= 64:\n' +
+    '            # metaEvidenceID is 2 * paramsIndex + requestType; the evidence group ties logs to one request.\n' +
+    '            request_type = int.from_bytes(log["data"][:32], "big") % 2\n' +
+    '            group = int.from_bytes(log["data"][32:64], "big")\n' +
+    '            break\n' +
+    '    if group is None:\n' +
+    '        _fail("dispute_not_in_tx")\n' +
+    '\n' +
+    '    # The accusation is the evidence filed by whoever says the skill is unsafe: the challenger of\n' +
+    '    # a registration (same transaction as the dispute), or the requester of a removal.\n' +
+    '    if request_type == 0:\n' +
+    '        if quote_tx != dispute_tx:\n' +
+    '            _fail("quote_tx_mismatch")\n' +
+    '    else:\n' +
+    '        opened = [log for log in _logs(receipts[quote_tx], registry, TOPIC_REQUEST) if len(log["topics"]) >= 2 and log["topics"][1] == item_id]\n' +
+    '        if not any(len(log["data"]) >= 32 and int.from_bytes(log["data"][:32], "big") == group for log in opened):\n' +
+    '            _fail("quote_tx_mismatch")\n' +
+    '    accusation = None\n' +
+    '    for log in _logs(receipts[quote_tx], registry, TOPIC_EVIDENCE):\n' +
+    '        t = log["topics"]\n' +
+    '        if len(t) >= 3 and int(t[2], 16) == group:\n' +
+    '            accusation = _dec_string(log["data"], 0)\n' +
+    '            break\n' +
+    '\n' +
+    '    return {"item_id": item_id, "request_type": REQUEST_TYPES[request_type], "listing": listing, "accusation"'... 16988 more characters,
+  args: [
+    CalldataAddress {
+      bytes: Uint8Array(20) [
+        190, 134, 102,  29, 106, 136,
+        173, 153, 122, 109,   3, 239,
+        162, 201, 122, 229, 199,   1,
+        124, 241
+      ]
+    },
+    CalldataAddress {
+      bytes: Uint8Array(20) [
+        209, 209, 116, 247,  87, 170,
+        180, 210, 249, 137, 230, 203,
+        117, 126,   0, 100, 148,  15,
+        212, 152
+      ]
+    }
+  ],
+  leaderOnly: false
+}
+
+Deployment Transaction Hash:
+0x6b4c1f1cbb9c9ea5a4ffe713d77dc0143b840ac422bc2a776fd6a2690575c6d6
+
+Error:
+Error: Timed out waiting for transaction 0x6b4c1f1cbb9c9ea5a4ffe713d77dc0143b840ac422bc2a776fd6a2690575c6d6 to reach status "ACCEPTED" (current status: 1).
+    at Object.waitForTransactionReceipt (file:///C:/Users/leoki/AppData/Roaming/npm/node_modules/genlayer/dist/index.js:51752:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async DeployAction.deploy (file:///C:/Users/leoki/AppData/Roaming/npm/node_modules/genlayer/dist/index.js:55014:22)
+    at async Command.<anonymous> (file:///C:/Users/leoki/AppData/Roaming/npm/node_modules/genlayer/dist/index.js:55334:7)
+
+✖ Error deploying contract
