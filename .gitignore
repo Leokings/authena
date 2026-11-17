@@ -12,3 +12,5 @@ data/
 .vercel
 kleros/build/
 upload-to-kleros.cmd
+video/node_modules/
+video/out/

@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { before, test } from "node:test";
-import { createPublicClient, createWalletClient, custom, parseEther, toFunctionSelector } from "viem";
+import { createPublicClient, createWalletClient, custom, keccak256, parseEther, toBytes, toFunctionSelector } from "viem";
 import { mnemonicToAccount } from "viem/accounts";
 import { hardhat } from "viem/chains";
 
@@ -69,7 +69,13 @@ test("only the relayer can give a ruling, and only 0, 1 or 2", async () => {
 });
 
 test("a relayed ruling reaches the list once and records the GenLayer transaction", async () => {
-  await write(relayer, arb, ARB.abi, "giveRuling", [1n, 2n, TX]);
+  const receipt = await write(relayer, arb, ARB.abi, "giveRuling", [1n, 2n, TX]);
+  // Kleros's Curate index reads the ruling only on the standard AppealPossible event.
+  const topic = keccak256(toBytes("AppealPossible(uint256,address)"));
+  const appeal = receipt.logs.find((l) => l.topics[0] === topic);
+  assert.ok(appeal, "AppealPossible was emitted");
+  assert.equal(BigInt(appeal.topics[1]), 1n);
+  assert.equal(("0x" + appeal.topics[2].slice(26)).toLowerCase(), list.toLowerCase());
   assert.equal(await read(list, MOCK.abi, "ruled", [1n]), true);
   assert.equal(await read(list, MOCK.abi, "rulings", [1n]), 2n);
   assert.equal(await read(arb, ARB.abi, "disputeStatus", [1n]), 2);

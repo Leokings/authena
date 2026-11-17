@@ -38,6 +38,9 @@ contract GenLayerArbitrator {
     Dispute[] public disputes;
 
     event DisputeCreation(uint256 indexed _disputeID, IArbitrable indexed _arbitrable);
+    /// @dev The standard ERC-792 signal that a ruling exists. Kleros's Curate index reads a
+    /// dispute's ruling only when this is emitted, so its website can show who won.
+    event AppealPossible(uint256 indexed _disputeID, IArbitrable indexed _arbitrable);
     event RulingRelayed(uint256 indexed disputeID, uint256 ruling, bytes32 genlayerTx);
     event RulingTimedOut(uint256 indexed disputeID);
     event CourtSet(string court);
@@ -113,6 +116,7 @@ contract GenLayerArbitrator {
         d.ruling = uint8(_ruling);
         d.genlayerTx = _genlayerTx;
         emit RulingRelayed(_disputeID, _ruling, _genlayerTx);
+        emit AppealPossible(_disputeID, IArbitrable(d.arbitrable));
         IArbitrable(d.arbitrable).rule(_disputeID, _ruling);
     }
 
@@ -123,6 +127,7 @@ contract GenLayerArbitrator {
         if (block.timestamp < uint256(d.createdAt) + timeout) revert TooEarly();
         d.status = DisputeStatus.Solved;
         emit RulingTimedOut(_disputeID);
+        emit AppealPossible(_disputeID, IArbitrable(d.arbitrable));
         IArbitrable(d.arbitrable).rule(_disputeID, 0);
     }
 
