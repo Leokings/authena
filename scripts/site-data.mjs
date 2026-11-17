@@ -41,5 +41,7 @@ const cards = m.cases.map((c) => {
     ],
   };
 });
-writeFileSync("site/data.json", JSON.stringify({ ...m, cards }, null, 2) + "\n");
+// The page rebuilds a listing's item file from these columns, so they must match kleros/columns.json exactly.
+const columns = JSON.parse(readFileSync("kleros/columns.json", "utf8"));
+writeFileSync("site/data.json", JSON.stringify({ ...m, columns, cards }, null, 2) + "\n");
 console.log(`site/data.json: ${cards.length} cards`);

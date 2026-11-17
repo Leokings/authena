@@ -63,7 +63,9 @@ const { studionet } = await import("genlayer-js/chains");
 const gl = createClient({ chain: studionet });
 const verdictOf = (id) => gl.readContract({ address: court, functionName: "get_verdict", args: [id], jsonSafeReturn: true });
 
-genlayerStep("00-deploy", readFileSync(`${receipts}/00-deploy.txt`, "utf8").match(/'Transaction Hash': '(0x[0-9a-f]{64})'/)?.[1] ?? null);
+// The CLI prints the hash in one of two shapes, depending on whether it saw the deploy confirm.
+const deployLog = readFileSync(`${receipts}/00-deploy.txt`, "utf8");
+genlayerStep("00-deploy", (deployLog.match(/'Transaction Hash': '(0x[0-9a-f]{64})'/) ?? deployLog.match(/Deployment Transaction Hash:\s*(0x[0-9a-f]{64})/))?.[1] ?? null);
 
 /** One dispute: the relay's record, the GenLayer receipt and the verdict read back from the judge. */
 async function dispute(relayed, label, expected) {

@@ -21,12 +21,8 @@ export const LIST_DESCRIPTION = "AI-agent skill versions that someone has staked
 // The standard evidence display Curate's own list wizard uses on Sepolia.
 export const EVIDENCE_DISPLAY = "/ipfs/QmQjJio59WkrQDzPC5kSP3EiGaqrWxjGfkvhmD2mWwm41M/index.html";
 
-export const COLUMNS = [
-  { label: "Repository", description: "GitHub repository as owner/name.", type: "text", isIdentifier: true },
-  { label: "Commit", description: "The full 40-character commit hash of the listed version.", type: "text", isIdentifier: true },
-  { label: "Folder", description: "Folder in the repository that holds SKILL.md.", type: "text", isIdentifier: true },
-  { label: "Skill", description: "Link to the skill at that commit.", type: "link", isIdentifier: false },
-];
+// One definition, shared with the website, so both build byte-identical item files.
+export const COLUMNS: { label: string; description: string; type: string; isIdentifier: boolean }[] = JSON.parse(readFileSync("kleros/columns.json", "utf8"));
 
 export const cases = (): Case[] => JSON.parse(readFileSync("fixtures/demo.json", "utf8"));
 export const commitOf = (c: Case, fix: string) => (c.commit === "FIX" ? fix : c.commit);
@@ -34,12 +30,53 @@ export const sha256 = (data: string | Buffer) => createHash("sha256").update(dat
 /** One stable serialisation, so the same content always gives the same file and the same CID. */
 export const stable = (doc: unknown) => JSON.stringify(doc, null, 2) + "\n";
 
-export function itemFile(c: Case, fix: string) {
-  const commit = commitOf(c, fix);
+/** The item file for one skill version. Everyone who builds it this way gets the same bytes. */
+export function itemFor(repo: string, commit: string, folder: string) {
   return {
     columns: COLUMNS,
-    values: { Repository: c.repo, Commit: commit, Folder: c.folder, Skill: `https://github.com/${c.repo}/tree/${commit}/${c.folder}` },
+    values: { Repository: repo, Commit: commit, Folder: folder, Skill: `https://github.com/${repo}/tree/${commit}${folder ? `/${folder}` : ""}` },
   };
+}
+
+export const itemFile = (c: Case, fix: string) => itemFor(c.repo, commitOf(c, fix), c.folder);
+
+const BASE58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+const varint = (n: number) => {
+  const out: number[] = [];
+  while (n >= 0x80) {
+    out.push((n & 0x7f) | 0x80);
+    n >>>= 7;
+  }
+  out.push(n);
+  return Buffer.from(out);
+};
+
+/**
+ * The IPFS address (CID version 0) of a small file, as `/ipfs/Qm…`: the hash of its one-block
+ * UnixFS node. It is what Kleros's uploader returns for a file under 256 KB, so an item's address,
+ * and from it the item's ID on Curate, can be worked out from the skill version alone.
+ */
+export function ipfsAddress(data: string | Buffer): string {
+  const bytes = Buffer.isBuffer(data) ? data : Buffer.from(data, "utf8");
+  const unixfs = Buffer.concat([Buffer.from([8, 2, 18]), varint(bytes.length), bytes, Buffer.from([24]), varint(bytes.length)]);
+  const digest = Buffer.concat([Buffer.from([18, 32]), createHash("sha256").update(Buffer.concat([Buffer.from([10]), varint(unixfs.length), unixfs])).digest()]);
+  let n = BigInt("0x" + digest.toString("hex"));
+  let text = "";
+  while (n > 0n) {
+    text = BASE58[Number(n % 58n)] + text;
+    n /= 58n;
+  }
+  return "/ipfs/" + text;
+}
+
+/** Whether Kleros's gateway serves exactly these bytes at their address. */
+export async function onIpfs(data: string): Promise<boolean> {
+  try {
+    const res = await fetch("https://cdn.kleros.link" + ipfsAddress(data), { signal: AbortSignal.timeout(25_000) });
+    return res.ok && Buffer.from(await res.arrayBuffer()).equals(Buffer.from(data, "utf8"));
+  } catch {
+    return false;
+  }
 }
 
 export function evidenceFile(quote: string, file = "SKILL.md") {

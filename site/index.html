@@ -201,7 +201,7 @@ import { sepolia } from "https://esm.sh/viem@2.21.0/chains";
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const short = (h) => (h ? h.slice(0, 8) + "…" + h.slice(-4) : "");
-const data = await fetch("data.json").then((r) => r.json());
+const data = await fetch("data.json", { cache: "no-cache" }).then((r) => r.json());
 const registry = data.sepolia.registry;
 const pub = createPublicClient({ chain: sepolia, transport: http("https://ethereum-sepolia-rpc.publicnode.com") });
 const abi = parseAbi(["function getItemInfo(bytes32) view returns (uint8 status, uint256 numberOfRequests, uint256 sumDeposit)"]);
@@ -220,20 +220,48 @@ function show(kind, stamp, line, small = "") {
   void s.offsetWidth; s.classList.add("go");
   o.querySelector("p").textContent = line; o.querySelector("small").textContent = small;
 }
+// A listing is a small file on IPFS. Its address, and from it the item's ID on Curate, follows
+// from the skill version alone, so the page needs no index to find it.
+const B58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+const varint = (n) => { const o = []; while (n >= 0x80) { o.push((n & 0x7f) | 0x80); n >>>= 7; } o.push(n); return o; };
+async function ipfsAddress(text) {
+  const b = new TextEncoder().encode(text);
+  const unix = [8, 2, 18, ...varint(b.length), ...b, 24, ...varint(b.length)];
+  const hash = new Uint8Array(await crypto.subtle.digest("SHA-256", new Uint8Array([10, ...varint(unix.length), ...unix])));
+  let n = BigInt("0x" + [18, 32, ...hash].map((x) => x.toString(16).padStart(2, "0")).join("")), s = "";
+  while (n > 0n) { s = B58[Number(n % 58n)] + s; n /= 58n; }
+  return "/ipfs/" + s;
+}
+const itemFile = (p) => JSON.stringify({ columns: data.columns, values: { Repository: p.repo, Commit: p.commit, Folder: p.path, Skill: `https://github.com/${p.repo}/tree/${p.commit}${p.path ? "/" + p.path : ""}` } }, null, 2) + "\n";
+
+let judge; // the GenLayer contract, read straight from the browser
+async function verdicts(p) {
+  try {
+    if (!judge) {
+      const [{ createClient }, { studionet }] = await Promise.all([import("https://esm.sh/genlayer-js@1.1.8"), import("https://esm.sh/genlayer-js@1.1.8/chains")]);
+      judge = createClient({ chain: studionet });
+    }
+    return await judge.readContract({ address: data.genlayer.contract.address, functionName: "get_skill", args: [p.repo, p.commit, p.path], jsonSafeReturn: true });
+  } catch { return null; }
+}
+
 async function check(text) {
   const p = parse(text);
   if (!p) return show("hm", "Hm?", "Paste a GitHub link to the skill's folder.");
   if (!/^[0-9a-f]{40}$/.test(p.commit)) return show("hm", "Pin it", "Use a link at a full commit, not a branch. Branches can change.");
-  show("hm", "…", "Asking Sepolia");
-  const id = keccak256(toHex(JSON.stringify({ repo: p.repo, commit: p.commit, path: p.path })));
+  show("hm", "…", "Asking Kleros Curate and GenLayer");
   const where = `${p.repo} · ${p.commit.slice(0, 10)} · ${p.path || "(root)"}`;
   try {
-    const [status, requests] = await pub.readContract({ address: registry, abi, functionName: "getItemInfo", args: [id] });
-    const s = Number(status);
-    if (s === 1) show("ok", "Clean", "On the list. Install this exact version.", where);
+    const ids = [keccak256(toHex(await ipfsAddress(itemFile(p)))), keccak256(toHex(JSON.stringify({ repo: p.repo, commit: p.commit, path: p.path })))];
+    const [infos, ruled] = await Promise.all([Promise.all(ids.map((id) => pub.readContract({ address: registry, abi, functionName: "getItemInfo", args: [id] }))), verdicts(p)]);
+    const info = infos.find((i) => Number(i[0]) !== 0) ?? infos.find((i) => Number(i[1]) > 0) ?? infos[0];
+    const s = Number(info[0]);
+    const bad = ruled?.verdicts?.find((v) => v.finding === "MALICIOUS");
+    if (bad) show("bad", "Busted", "Validators ruled this version malicious. Don't install it.", `“${bad.quote}”`);
+    else if (s === 1) show("ok", "Clean", "On the list. Install this exact version.", where);
     else if (s === 2) show("hm", "Pending", "Listed, still open to challenge.", where);
     else if (s === 3) show("hm", "Disputed", "Someone wants it removed. Wait for the ruling.", where);
-    else if (Number(requests) > 0) show("bad", "Busted", "Submitted and rejected. Don't install it.", where);
+    else if (Number(info[1]) > 0) show("hm", "Not listed", "It was submitted, but it is not on the list.", where);
     else show("hm", "Unknown", "Nobody has vouched for this version.", where);
   } catch { show("hm", "Oops", "Couldn't reach Sepolia. Try again."); }
 }
@@ -261,7 +289,7 @@ for (const c of cards.filter((c) => c.link).slice(0, 3)) {
   $("chips").appendChild(b);
 }
 
-$("curate").href = `https://curate.kleros.io/tcr/11155111/${registry}`;
+$("curate").href = data.sepolia.curate_url ?? `https://curate.kleros.io/tcr/11155111/${registry}`;
 $("addr").innerHTML = `list <a href="https://sepolia.etherscan.io/address/${esc(registry)}" target="_blank" rel="noopener">${esc(short(registry))}</a> · judge <a href="${esc(data.genlayer.contract.explorer)}" target="_blank" rel="noopener">${esc(short(data.genlayer.contract.address))}</a>`;
 
 // ---- the owl watches the cursor -----------------------------------------------------

@@ -1,0 +1,22 @@
+{
+  "network": "sepolia",
+  "chainId": 11155111,
+  "factory": "0x3FB8314C628E9afE7677946D3E23443Ce748Ac17",
+  "arbitrator": "0x7cf8e8931672a6df055c3afcf1507240f0800f1d",
+  "registry": "0x55eE54a2E59c5eF69f8228300B5007D1bF71059f",
+  "deployer": "0xEAa24431285FE4939e8595AA3a555Bfb657D4002",
+  "relayer": "0xEAa24431285FE4939e8595AA3a555Bfb657D4002",
+  "arbitratorDeployTx": "0x6fc953dcd11278be767d9dcb50a3deb8840677013b2898b48a0b68d1ee3da82a",
+  "registryDeployTx": "0xcea66bf501724116d78d461a59c2476e1670758c3b10d68d0e3cf087ab94b095",
+  "fromBlock": "12150459",
+  "depositWei": "1000000000000000",
+  "arbitrationFeeWei": "0",
+  "challengePeriodSeconds": 600,
+  "rulingTimeoutSeconds": 1800,
+  "policy": "/ipfs/QmeNiNwnmtcUYGxnTW82nGSTvMAbC37kuzXu7W7Soy7hbZ",
+  "registrationMetaEvidence": "/ipfs/QmRRH5ht7rNeqzN6ZsoKZzezkXz7qbvcgquxRBsWk4eNmB",
+  "clearingMetaEvidence": "/ipfs/QmWJcnjApoWrVgU9cwCZNjYQsP6bVo59sebUrfV39Mq8uA",
+  "curateUrl": "https://curate.kleros.io/tcr/11155111/0x55eE54a2E59c5eF69f8228300B5007D1bF71059f",
+  "arbitratorSource": "evm/GenLayerArbitrator.sol",
+  "compiler": "0.8.26+commit.8a97fa7a.Emscripten.clang"
+}

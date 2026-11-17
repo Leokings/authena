@@ -108,6 +108,11 @@ export async function verdict(disputeId: number): Promise<any> {
   return genlayer.readContract({ address: court() as any, functionName: "get_verdict", args: [disputeId], jsonSafeReturn: true } as any);
 }
 
+/** Every verdict the judge holds about one skill version, and whether any found it malicious. */
+export async function skillVerdicts(repo: string, commit: string, folder: string): Promise<{ malicious: boolean; verdicts: any[] }> {
+  return genlayer.readContract({ address: court() as any, functionName: "get_skill", args: [repo, commit, folder], jsonSafeReturn: true } as any) as any;
+}
+
 /** Sends one write to the GenLayer contract through the CLI and waits for FINALIZED. */
 export function genlayerWrite(label: string, method: string, args: (string | number)[]) {
   const out = execFileSync("bash", ["scripts/gl-tx.sh", label, court(), method, ...args.map(String)], { encoding: "utf8", env: { ...process.env, OUT_DIR: "deployments/studionet/receipts" } });
