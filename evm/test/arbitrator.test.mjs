@@ -96,8 +96,12 @@ test("a dispute with no ruling can be closed by anyone, but only after the timeo
   await fails(relayer, arb, ARB.abi, "giveRuling", [id, 2n, TX], "NotWaiting");
 });
 
-test("there are no appeals", async () => {
-  assert.deepEqual(await read(arb, ARB.abi, "appealPeriod", [1n]), [0n, 0n]);
+test("there are no appeals, and the empty appeal period sits at the ruling's real time", async () => {
+  const [start, end] = await read(arb, ARB.abi, "appealPeriod", [1n]);
+  assert.equal(start, end);
+  const ruledAt = (await read(arb, ARB.abi, "disputes", [1n]))[5];
+  assert.equal(start, ruledAt);
+  assert.ok(start > 1_700_000_000n, "a real timestamp, not zero");
   await fails(stranger, arb, ARB.abi, "appeal", [1n, "0x"], "NoAppeals");
 });
 

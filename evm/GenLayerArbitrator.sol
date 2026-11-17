@@ -25,6 +25,7 @@ contract GenLayerArbitrator {
         DisputeStatus status;
         uint8 ruling;
         bytes32 genlayerTx;
+        uint64 ruledAt;
     }
 
     uint256 public constant MAX_RULING = 2; // 0 refuse to rule, 1 requester, 2 challenger
@@ -80,7 +81,7 @@ contract GenLayerArbitrator {
     function createDispute(uint256, bytes calldata) external payable returns (uint256 disputeID) {
         if (msg.value < fee) revert FeeTooLow();
         disputeID = disputes.length;
-        disputes.push(Dispute(msg.sender, uint64(block.timestamp), DisputeStatus.Waiting, 0, bytes32(0)));
+        disputes.push(Dispute(msg.sender, uint64(block.timestamp), DisputeStatus.Waiting, 0, bytes32(0), 0));
         emit DisputeCreation(disputeID, IArbitrable(msg.sender));
     }
 
@@ -92,9 +93,12 @@ contract GenLayerArbitrator {
         return disputes[_disputeID].ruling;
     }
 
-    /// @notice No appeals: an empty appeal period makes Curate's appeal funding unavailable.
-    function appealPeriod(uint256) external pure returns (uint256 start, uint256 end) {
-        return (0, 0);
+    /// @notice No appeals: the appeal period is empty (it starts and ends when the ruling was
+    /// given), so Curate never accepts appeal funding. Kleros's website shows that time as the
+    /// ruling's date, so it must be the real one, not zero.
+    function appealPeriod(uint256 _disputeID) external view returns (uint256 start, uint256 end) {
+        uint256 at = disputes[_disputeID].ruledAt;
+        return (at, at);
     }
 
     function appealCost(uint256, bytes calldata) external pure returns (uint256) {
@@ -115,6 +119,7 @@ contract GenLayerArbitrator {
         d.status = DisputeStatus.Solved;
         d.ruling = uint8(_ruling);
         d.genlayerTx = _genlayerTx;
+        d.ruledAt = uint64(block.timestamp);
         emit RulingRelayed(_disputeID, _ruling, _genlayerTx);
         emit AppealPossible(_disputeID, IArbitrable(d.arbitrable));
         IArbitrable(d.arbitrable).rule(_disputeID, _ruling);
@@ -126,6 +131,7 @@ contract GenLayerArbitrator {
         Dispute storage d = _waiting(_disputeID);
         if (block.timestamp < uint256(d.createdAt) + timeout) revert TooEarly();
         d.status = DisputeStatus.Solved;
+        d.ruledAt = uint64(block.timestamp);
         emit RulingTimedOut(_disputeID);
         emit AppealPossible(_disputeID, IArbitrable(d.arbitrable));
         IArbitrable(d.arbitrable).rule(_disputeID, 0);
