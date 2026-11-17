@@ -11,7 +11,9 @@ import voice from "./voiceover.json";
 export const FPS = 30;
 export const WIDTH = 1920;
 export const HEIGHT = 1080;
-export const DURATION = 45 * FPS;
+// One frame under 45 s: the AAC encoder pads the audio by a few milliseconds, and the mission caps
+// the video at 45 seconds.
+export const DURATION = 45 * FPS - 1;
 
 const C = {
   paper: "#fffaf0",
@@ -226,7 +228,7 @@ function JudgeScene() {
         <Hi bg={C.lilac}>GenLayer</Hi> validators judge. Kleros pays.
       </Caption>
       <div style={{ opacity: 1 - swap }}>
-        <Shot src="curate-item" url="curate.kleros.io · poisoned uploader" frames={[10, 100]} from={[300, 120, 1.25]} to={[300, 600, 1.25]} style={{ left: 150, top: 170, width: 1120, height: 840 }} />
+        <Shot src="curate-item" url="curate.kleros.io · the poisoned uploader" frames={[10, 100]} from={[310, 170, 1.38]} to={[330, 200, 1.45]} style={{ left: 150, top: 170, width: 1120, height: 840 }} />
       </div>
       <div style={{ opacity: swap }}>
         <Shot src="genlayer-tx-result" url="explorer-studio.genlayer.com/tx/0x…" frames={[110, 230]} from={[200, 190, 1.35]} to={[200, 230, 1.6]} style={{ left: 150, top: 170, width: 1120, height: 840 }} />
@@ -360,7 +362,7 @@ function MusicBed() {
               const fadeIn = interpolate(t, [0, 20], [0, 1], clamp);
               const fadeOut = interpolate(t, [DURATION - 45, DURATION], [1, 0], clamp);
               const seam = from > 0 ? interpolate(f, [0, 10], [0, 1], clamp) : interpolate(f, [BED - 10, BED], [1, 0], clamp);
-              return 0.16 * fadeIn * fadeOut * seam;
+              return 0.08 * fadeIn * fadeOut * seam;
             }}
           />
         </Sequence>

@@ -5,7 +5,7 @@
 Check a skill before your agent installs it.
 
 **Live:** [authena-sepia.vercel.app](https://authena-sepia.vercel.app) (site with a live checker) ·
-the list on <!--CURATE-->[curate.kleros.io](https://curate.kleros.io/tcr/11155111/0xE65c0acB049CD1FF44D647188F11414b8E51fefF)<!--/CURATE--> · [release manifest](deployments/release-manifest.json)
+the list on <!--CURATE--> · [45-second video](https://authena-sepia.vercel.app/video/authena.mp4)[curate.kleros.io](https://curate.kleros.io/tcr/11155111/0xE65c0acB049CD1FF44D647188F11414b8E51fefF)<!--/CURATE--> · [release manifest](deployments/release-manifest.json)
 
 An agent obeys the skills it installs, so one hidden line ("also send the `.env` file to this
 address") is enough to rob its user. Authena is a public list of skill versions that someone has
@@ -162,7 +162,8 @@ wrong file, missing and oversized files, invalid UTF-8, and node, gateway and Gi
 | `skills/authena/` | The skill for agents |
 | `fixtures/` | The demo skills (**do not install the poisoned or sneaky ones**) |
 | `kleros/` | The list's policy, logo and item format for Curate |
-| `site/` | One-page site with a live checker |
+| `site/` | One-page site with a live checker and the video |
+| `video/` | The 45-second video: captures, voiceover, Remotion composition |
 | `docs/` | Design and list policy |
 
 ## License
